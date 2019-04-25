@@ -1,0 +1,1274 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>企鹅FM</title>
+  <link rel="shortcut icon" href="img/favicon.png">
+  <link rel="stylesheet" href="css/github-markdown.css">
+  <style>
+    body {
+      box-sizing: border-box;
+      min-width: 200px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 15px;
+      background-image: url('img/1 (1).jpg');
+      background-size: 100%;
+    }
+    
+  .demo {
+    width: 100%;
+    height: 100%;
+    background-image: -webkit-linear-gradient(left, green, purple 25%, green 50%, purple 75%, green);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-background-size: 200% 100%;
+    -webkit-animation: masked-animation 3s infinite linear;
+  }
+
+  @-webkit-keyframes masked-animation {
+    0% {
+      background-position: 0 0;
+    }
+
+    100% {
+      background-position: -100% 0;
+    }
+  }
+    .markdown-body>ul {
+      list-style: none;
+      display: block;
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      font-size: 12px;
+      border-radius: 5px;
+      border-style: solid;
+      border-width: 1px;
+      border-color: #d5d5d5;
+      padding: 10px 15px;
+    }
+    .markdown-body>ul>li>ul>li>ul{
+      list-style: none;
+    }
+    @media screen and (max-width: 768px) {
+      .markdown-body>ul {
+        /* display: none; */
+      }
+    }
+  </style>
+</head>
+
+<body class="markdown-body" id="body">
+  <!--favicon:./qqfm/favicon.png-->
+  <p>
+    <a href="https://api.imjad.cn">返回首页</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="music.html">音乐</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="pixiv.html">动漫</a>
+  </p>
+  <script type="text/javascript">
+    document.getElementById('body').style.backgroundImage = "url('img/1 (" + new Date().getDate() + ").jpg')"
+  </script>
+  <style>
+    a {
+      color: #333;
+      text-decoration: none;
+    }
+    a,td{
+      cursor: pointer;
+    }
+    .copyright {
+      font-size: 0.8em;
+    }
+
+    a img {
+      width: 17px;
+      height: 17px;
+    }
+
+    input[type="text"],
+    select {
+      height: 22px;
+    }
+
+    ::selection {
+      color: #414141;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    div#getAlbumList {
+      display: inline-block;
+    }
+.tools{
+  display: flex;
+}
+    .tool ul {
+      /*white-space:pre;*/
+      list-style: none;
+      font-size: 1.5em;
+      line-height: 1.55em;
+      margin: 5px;
+      padding-left: 0;
+      display: inline-block;
+      font-family: Consolas, Monaco, monospace;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .tool ul>li {
+      padding: 0 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tool ul>li:hover {
+      background-color: #ccc;
+    }
+
+    .tool ul>li.focus {
+      background-color: #ddd;
+    }
+    
+    span.page {
+      display: inline-block;
+      margin-right: 20px;
+      padding: 0 5px;
+      line-height: 2;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: greenyellow;
+      border: 1px solid greenyellow;
+      border-radius: 3px;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    span.page:hover {
+      background-color: #bbb;
+    }
+
+    audio::-internal-media-controls-download-button,
+    video::-internal-media-controls-download-button {
+      display: none;
+    }
+
+    audio::-webkit-media-controls-enclosure,
+    video::-webkit-media-controls-enclosure {
+      overflow: hidden;
+    }
+
+    audio::-webkit-media-controls-panel,
+    video::-webkit-media-controls-panel {
+      width: calc(100% + 30px);
+    }
+
+  </style>
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <a href="#">分类列表</a>
+          <ul>
+            <li>
+              <a href="#情感生活">情感生活</a>
+            </li>
+            <li>
+              <a href="#音乐电台">音乐电台</a>
+            </li>
+            <li>
+              <a href="#有声小说">有声小说</a>
+            </li>
+            <li>
+              <a href="#相声曲艺">相声曲艺</a>
+            </li>
+            <li>
+              <a href="#综艺娱乐">综艺娱乐</a>
+            </li>
+            <li>
+              <a href="#妈咪宝贝">妈咪宝贝</a>
+            </li>
+            <li>
+              <a href="#知识干货">知识干货</a>
+            </li>
+            <li>
+              <a href="#历史人文">历史人文</a>
+            </li>
+            <li>
+              <a href="#新闻资讯">新闻资讯</a>
+            </li>
+            <li>
+              <a href="#搞笑段子">搞笑段子</a>
+            </li>
+            <li>
+              <a href="#广播电台">广播电台</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#小工具">小工具</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <h4 id=情感生活>情感生活</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>39104</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>39105</td>
+        <td>情感治愈</td>
+      </tr>
+      <tr>
+        <td>109</td>
+        <td>晚安心语</td>
+      </tr>
+      <tr>
+        <td>39106</td>
+        <td>美文故事</td>
+      </tr>
+      <tr>
+        <td>38983</td>
+        <td>恋爱宝典</td>
+      </tr>
+      <tr>
+        <td>107</td>
+        <td>两性夜话</td>
+      </tr>
+      <tr>
+        <td>108</td>
+        <td>旅行人文</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=音乐电台>音乐电台</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>39110</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>102</td>
+        <td>心情</td>
+      </tr>
+      <tr>
+        <td>118</td>
+        <td>乐评</td>
+      </tr>
+      <tr>
+        <td>117</td>
+        <td>歌手</td>
+      </tr>
+      <tr>
+        <td>38936</td>
+        <td>流行</td>
+      </tr>
+      <tr>
+        <td>39116</td>
+        <td>经典</td>
+      </tr>
+      <tr>
+        <td>40083</td>
+        <td>催眠</td>
+      </tr>
+      <tr>
+        <td>38937</td>
+        <td>欧美</td>
+      </tr>
+      <tr>
+        <td>40078</td>
+        <td>日韩</td>
+      </tr>
+      <tr>
+        <td>101</td>
+        <td>榜单</td>
+      </tr>
+      <tr>
+        <td>40038</td>
+        <td>粤语</td>
+      </tr>
+      <tr>
+        <td>103</td>
+        <td>纯音</td>
+      </tr>
+      <tr>
+        <td>100</td>
+        <td>3D</td>
+      </tr>
+      <tr>
+        <td>40030</td>
+        <td>电子</td>
+      </tr>
+      <tr>
+        <td>40029</td>
+        <td>喊麦</td>
+      </tr>
+      <tr>
+        <td>40082</td>
+        <td>原创</td>
+      </tr>
+      <tr>
+        <td>38938</td>
+        <td>翻唱</td>
+      </tr>
+      <tr>
+        <td>38943</td>
+        <td>民谣</td>
+      </tr>
+      <tr>
+        <td>40079</td>
+        <td>摇滚</td>
+      </tr>
+      <tr>
+        <td>40028</td>
+        <td>动漫</td>
+      </tr>
+      <tr>
+        <td>40080</td>
+        <td>古风</td>
+      </tr>
+      <tr>
+        <td>40081</td>
+        <td>宗教</td>
+      </tr>
+      <tr>
+        <td>40077</td>
+        <td>跑步</td>
+      </tr>
+      <tr>
+        <td>38942</td>
+        <td>影视</td>
+      </tr>
+      <tr>
+        <td>40039</td>
+        <td>古典</td>
+      </tr>
+      <tr>
+        <td>40036</td>
+        <td>世界</td>
+      </tr>
+      <tr>
+        <td>40037</td>
+        <td>儿童</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=有声小说>有声小说</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>39092</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>41092</td>
+        <td>悬疑推理</td>
+      </tr>
+      <tr>
+        <td>39096</td>
+        <td>恐怖灵异</td>
+      </tr>
+      <tr>
+        <td>38954</td>
+        <td>玄幻奇幻</td>
+      </tr>
+      <tr>
+        <td>38949</td>
+        <td>现代言情</td>
+      </tr>
+      <tr>
+        <td>38951</td>
+        <td>古代言情</td>
+      </tr>
+      <tr>
+        <td>105</td>
+        <td>鬼故事</td>
+      </tr>
+      <tr>
+        <td>104</td>
+        <td>影视原著</td>
+      </tr>
+      <tr>
+        <td>40042</td>
+        <td>网游竞技</td>
+      </tr>
+      <tr>
+        <td>38953</td>
+        <td>都市生活</td>
+      </tr>
+      <tr>
+        <td>38958</td>
+        <td>武侠传奇</td>
+      </tr>
+      <tr>
+        <td>38957</td>
+        <td>官场商战</td>
+      </tr>
+      <tr>
+        <td>38960</td>
+        <td>历史军事</td>
+      </tr>
+      <tr>
+        <td>38959</td>
+        <td>青春校园</td>
+      </tr>
+      <tr>
+        <td>40041</td>
+        <td>耽美同人</td>
+      </tr>
+      <tr>
+        <td>39103</td>
+        <td>广播剧</td>
+      </tr>
+      <tr>
+        <td>40040</td>
+        <td>社科管理</td>
+      </tr>
+      <tr>
+        <td>38956</td>
+        <td>文学名著</td>
+      </tr>
+      <tr>
+        <td>41093</td>
+        <td>杂志专栏</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=相声曲艺>相声曲艺</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>4</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>38963</td>
+        <td>郭德纲</td>
+      </tr>
+      <tr>
+        <td>39109</td>
+        <td>相声新星</td>
+      </tr>
+      <tr>
+        <td>38971</td>
+        <td>相声名家</td>
+      </tr>
+      <tr>
+        <td>38969</td>
+        <td>评书大全</td>
+      </tr>
+      <tr>
+        <td>38970</td>
+        <td>小品大全</td>
+      </tr>
+      <tr>
+        <td>111</td>
+        <td>粤语评书</td>
+      </tr>
+      <tr>
+        <td>40048</td>
+        <td>刘兰芳</td>
+      </tr>
+      <tr>
+        <td>40049</td>
+        <td>王玥波</td>
+      </tr>
+      <tr>
+        <td>38965</td>
+        <td>单田芳</td>
+      </tr>
+      <tr>
+        <td>38966</td>
+        <td>袁阔成</td>
+      </tr>
+      <tr>
+        <td>38972</td>
+        <td>田连元</td>
+      </tr>
+      <tr>
+        <td>39133</td>
+        <td>戏曲名剧</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=综艺娱乐>综艺娱乐</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>38985</td>
+        <td>影视精选</td>
+      </tr>
+      <tr>
+        <td>38974</td>
+        <td>热门综艺</td>
+      </tr>
+      <tr>
+        <td>38982</td>
+        <td>八卦娱乐</td>
+      </tr>
+      <tr>
+        <td>113</td>
+        <td>星座风水</td>
+      </tr>
+      <tr>
+        <td>38980</td>
+        <td>明星专区</td>
+      </tr>
+      <tr>
+        <td>116</td>
+        <td>游戏动漫</td>
+      </tr>
+      <tr>
+        <td>40043</td>
+        <td>文娱杂谈</td>
+      </tr>
+      <tr>
+        <td>40045</td>
+        <td>时尚生活</td>
+      </tr>
+      <tr>
+        <td>40044</td>
+        <td>影视原声</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=妈咪宝贝>妈咪宝贝</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>39120</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>40005</td>
+        <td>睡前故事</td>
+      </tr>
+      <tr>
+        <td>40002</td>
+        <td>童话寓言</td>
+      </tr>
+      <tr>
+        <td>40001</td>
+        <td>儿歌音乐</td>
+      </tr>
+      <tr>
+        <td>40003</td>
+        <td>孕妈育儿</td>
+      </tr>
+      <tr>
+        <td>40009</td>
+        <td>经典名著</td>
+      </tr>
+      <tr>
+        <td>40070</td>
+        <td>诗词国学</td>
+      </tr>
+      <tr>
+        <td>40007</td>
+        <td>儿童英语</td>
+      </tr>
+      <tr>
+        <td>40008</td>
+        <td>儿童科普</td>
+      </tr>
+      <tr>
+        <td>40076</td>
+        <td>儿童教材</td>
+      </tr>
+      <tr>
+        <td>40004</td>
+        <td>卡通动画</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=知识干货>知识干货</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>39126</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>40014</td>
+        <td>科普充电</td>
+      </tr>
+      <tr>
+        <td>40072</td>
+        <td>名人专栏</td>
+      </tr>
+      <tr>
+        <td>40073</td>
+        <td>情商心理</td>
+      </tr>
+      <tr>
+        <td>39127</td>
+        <td>语言学习</td>
+      </tr>
+      <tr>
+        <td>114</td>
+        <td>考试教材</td>
+      </tr>
+      <tr>
+        <td>40060</td>
+        <td>职场提升</td>
+      </tr>
+      <tr>
+        <td>40071</td>
+        <td>互联网</td>
+      </tr>
+      <tr>
+        <td>39012</td>
+        <td>公开课演讲</td>
+      </tr>
+      <tr>
+        <td>39131</td>
+        <td>健康养生</td>
+      </tr>
+      <tr>
+        <td>39129</td>
+        <td>创业投资</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=历史人文>历史人文</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>18</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>40055</td>
+        <td>野史趣闻</td>
+      </tr>
+      <tr>
+        <td>40075</td>
+        <td>佛学修身</td>
+      </tr>
+      <tr>
+        <td>39132</td>
+        <td>传奇档案</td>
+      </tr>
+      <tr>
+        <td>39134</td>
+        <td>文化讲坛</td>
+      </tr>
+      <tr>
+        <td>40054</td>
+        <td>人物传纪</td>
+      </tr>
+      <tr>
+        <td>40050</td>
+        <td>中国历史</td>
+      </tr>
+      <tr>
+        <td>40062</td>
+        <td>世界历史</td>
+      </tr>
+      <tr>
+        <td>40052</td>
+        <td>军事战争</td>
+      </tr>
+      <tr>
+        <td>40074</td>
+        <td>人文艺术</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=新闻资讯>新闻资讯</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>5</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>38924</td>
+        <td>头条新闻</td>
+      </tr>
+      <tr>
+        <td>38925</td>
+        <td>深度观点</td>
+      </tr>
+      <tr>
+        <td>39078</td>
+        <td>社会百态</td>
+      </tr>
+      <tr>
+        <td>39049</td>
+        <td>商业财经</td>
+      </tr>
+      <tr>
+        <td>38927</td>
+        <td>IT科技</td>
+      </tr>
+      <tr>
+        <td>38931</td>
+        <td>军事要闻</td>
+      </tr>
+      <tr>
+        <td>110</td>
+        <td>自媒体</td>
+      </tr>
+      <tr>
+        <td>38929</td>
+        <td>汽车</td>
+      </tr>
+      <tr>
+        <td>38930</td>
+        <td>体育</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=搞笑段子>搞笑段子</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>39087</td>
+        <td>全部专辑</td>
+      </tr>
+      <tr>
+        <td>38976</td>
+        <td>热点趣闻</td>
+      </tr>
+      <tr>
+        <td>38979</td>
+        <td>糗事百科</td>
+      </tr>
+      <tr>
+        <td>106</td>
+        <td>内涵段子</td>
+      </tr>
+      <tr>
+        <td>40015</td>
+        <td>聊江湖</td>
+      </tr>
+      <tr>
+        <td>38978</td>
+        <td>冷笑话</td>
+      </tr>
+      <tr>
+        <td>38977</td>
+        <td>方言秀</td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id=广播电台>广播电台</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>39137</td>
+        <td>全部专辑</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id=小工具>小工具</h3>
+  <div class="tool">
+    <div class="tools">
+      <div id="getAlbumList">
+        分类:
+        <input type="text" name="category" value="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+          onkeypress="if(event.keyCode==13){document.getElementsByName('getAlbumListByCategory')[0].click();return false;}"
+          maxlength="5">&nbsp;
+        <input type="text" name="page" value="1" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+          onkeypress="if(event.keyCode==13){document.getElementsByName('getAlbumListByCategory')[0].click();return false;}"
+          style="width:30px">&nbsp;
+        <input type="button" name="getAlbumListByCategory" value="获取专辑列表">
+        <br>
+        <ul id="AlbumList"></ul>
+        <br>
+        <span id="prevPage" class="page">上一页</span>
+        <span id="nextPage" class="page">下一页</span>
+      </div>
+      <br>
+      <div id="getSkipShow">
+        详情:
+        <input type="text" name="albumID" value="" onkeyup="this.value=this.value.replace(/[^\w\.\/]/ig,'')"
+          onafterpaste="this.value=this.value.replace(/[^\w\.\/]/ig,'')" onkeypress="if(event.keyCode==13){document.getElementsByName('getSkipShow')[0].click();return false;}">&nbsp;
+        <input type="button" name="getSkipShow" value="获取节目列表">
+        <br>
+        <ul id="Shows"></ul>
+        <br>
+        <span id="prevPageShows" class="page">上一页</span>
+        <span id="nextPageShows" class="page">下一页</span>
+      </div>
+    </div>
+    <br>
+    <input type="checkbox" id="autoplay" name="autoplay" checked>
+    <label for="autoplay">自动播放下一节目</label>
+    <br>
+    <audio id="audio" controls autoplay style="width:100%;max-width:800px;"></audio>
+  </div>
+
+  <script src="js/jquery-3.3.1.min.js"></script>
+
+  <script type="text/javascript">
+    var btn = document.querySelectorAll("tr");
+    for (var i = 0; i < btn.length; i++) {
+      btn[i].addEventListener('click', function () {
+        var category = document.getElementsByName('category')[0].value = this.children[0].innerHTML;
+        var page = document.getElementsByName('page')[0].value;
+        getAlbumListByCategory(category, page);
+        $("html, body").animate({
+          scrollTop: $("#getAlbumList").offset().top
+        }, {
+          duration: 500,
+          easing: "swing"
+        });
+        return false;
+      }, false)
+    }
+  </script>
+  <script>
+    function getAlbumListByCategory(id, page) {
+      Ajax( //Ajax(type, url, data, success, failed)
+        'get',
+        'https://api.imjad.cn/qqfm/v1/',
+        'type=album&page_size=10&id=' + id + '&page=' + page,
+        function (data) {
+          data = JSON.parse(data);
+          console.log(data);
+          var arr = data.data.albumInfoList;
+          var id, list;
+          var page = document.getElementsByName('page')[0].value;
+          document.getElementById('AlbumList').innerHTML = '';
+          console.log(page);
+          for (var i = 0; i < arr.length; i++) {
+            id = arr[i].album.albumID;
+            list = document.createElement('li');
+            list.id = id;
+            list.onclick = function () {
+              hitokoto()
+              document.getElementsByName('albumID')[0].value = this.id;
+              for (var i = 0; i < AlbumList.length; i++) {
+                AlbumList[i].classList.remove('focus');
+              }
+              this.classList.add('focus');
+              getSkipShow(this.id, 0);
+              $("html, body").animate({
+                scrollTop: $("#Shows").offset().top
+              }, {
+                duration: 500,
+                easing: "swing"
+              });
+              return false;
+            }
+            list.innerText = i + 1 + '.' + arr[i].album.name;
+            document.getElementById('AlbumList').appendChild(list);
+          }
+
+          AlbumList = document.getElementById('AlbumList').getElementsByTagName('li');
+          for (var i = 0; i < AlbumList.length; i++) {
+            if (AlbumList[i].id == document.getElementsByName('albumID')[0].value) {
+              AlbumList[i].classList.add('focus');
+            }
+          }
+
+          document.getElementById('prevPage').onclick = function () {
+            if (page > 1) {
+              page--;
+              document.getElementsByName('page')[0].value = page;
+              document.getElementsByName('getAlbumListByCategory')[0].click();
+            }
+          }
+          document.getElementById('nextPage').onclick = function () {
+            page++;
+            document.getElementsByName('page')[0].value = page;
+            document.getElementsByName('getAlbumListByCategory')[0].click();
+          }
+        },
+        function (error) {
+          var spans = document.getElementsByClassName("update")[0].getElementsByTagName("span");
+          for (var i = 0; i < spans.length; i++) {
+            spans[i].innerHTML = "读取失败";
+          }
+        });
+    }
+
+    function getSkipShow(albumID, index) {
+      Ajax( //Ajax(type, url, data, success, failed)
+        'get',
+        'https://api.imjad.cn/qqfm/v1/',
+        'type=show&id=' + albumID,
+        function (data) {
+          data = JSON.parse(data);
+          arr_shows = chunk(data, 10)[index];
+
+          var shows = '';
+          for (var i = 0; i < arr_shows.length; i++) {
+            shows = shows + arr_shows[i] + ',';
+          }
+          document.getElementsByName('shows').value = shows
+          var _get = "type=skip_show&id=" + albumID + "&shows=" + shows;
+          Ajax( //Ajax(type, url, data, success, failed)
+            'get',
+            'https://api.imjad.cn/qqfm/v1/',
+            _get,
+            function (data) {
+              var url, id, name;
+              data = JSON.parse(data);
+              var audio = document.getElementById('audio');
+              document.getElementById('Shows').innerHTML = '';
+
+              var showList = [];
+              for (var i = 0; i < arr_shows.length; i++) {
+                showList[i] = data.data.showList[arr_shows[i]];
+              }
+              data.data.showList = showList;
+
+              for (i in data.data.showList) {
+                showId = data.data.showList[i].show.showID;
+                name = data.data.showList[i].show.name;
+                album = data.data.showList[i].album.name;
+                cover = data.data.showList[i].show.cover.urls[0].url;
+                url = data.data.showList[i].show.audioURL.urls[0].url;
+                var list = document.createElement('li');
+                list.id = showId;
+                list.dataset.name = name;
+                list.dataset.album = album;
+                list.dataset.cover = cover;
+                list.dataset.url = url;
+                list.onclick = function () {
+                  hitokoto()
+                  for (var i = 0; i < Shows.length; i++) {
+                    Shows[i].classList.remove('focus');
+                  }
+                  this.classList.add('focus');
+                  document.title = this.dataset.name + ' - ' + this.dataset.album;
+                  audio.dataset.id = this.id;
+                  audio.preload = 'metadata';
+                  audio.src = this.dataset.url;
+                  audio.onended = function () {
+                    if (document.getElementById('autoplay').checked) {
+                      nexttrack();
+                    }
+                  }
+                  if (os.isPhone) { // metadata 中的 artwork 偶尔不生效
+                    document.head.querySelector('link').href = this.dataset.cover;
+                  }
+                  if ('mediaSession' in navigator) {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                      title: this.dataset.name,
+                      album: this.dataset.album,
+                      artwork: [{
+                        src: this.dataset.cover,
+                        sizes: '720x720',
+                        type: 'image/jpeg'
+                      }, ]
+                    });
+
+                    navigator.mediaSession.setActionHandler('play', function () {
+                      console.log('play');
+                      audio.play();
+                    });
+                    navigator.mediaSession.setActionHandler('pause', function () {
+                      console.log('pause');
+                      audio.pause();
+                    });
+                    navigator.mediaSession.setActionHandler('seekbackward', function () {
+                      console.log('seekbackward');
+                      audio.currentTime = audio.currentTime - 10;
+                    });
+                    navigator.mediaSession.setActionHandler('seekforward', function () {
+                      console.log('seekforward');
+                      audio.currentTime = audio.currentTime + 10;
+                    });
+                    navigator.mediaSession.setActionHandler('previoustrack', function () {
+                      console.log('previoustrack');
+                      previoustrack();
+                    });
+                    navigator.mediaSession.setActionHandler('nexttrack', function () {
+                      console.log('nexttrack');
+                      nexttrack();
+                    });
+                  }
+                }
+                list.innerText = i + '.' + name;
+                document.getElementById('Shows').appendChild(list);
+              }
+
+              Shows = document.getElementById('Shows').getElementsByTagName('li');
+              for (var i = 0; i < Shows.length; i++) {
+                if (Shows[i].id == document.getElementById('audio').dataset.id) {
+                  Shows[i].classList.add('focus');
+                }
+              }
+
+              document.getElementById('prevPageShows').onclick = function () {
+                if (index > 0) {
+                  index--;
+                  getSkipShow(albumID, index);
+                }
+              }
+              document.getElementById('nextPageShows').onclick = function () {
+                index++;
+                getSkipShow(albumID, index);
+              }
+            },
+            function (error) {
+              document.getElementsByClassName("tool")[0].innerHTML +=
+                "<span style=\"color:red\"><b>读取失败</b></span>";
+            });
+        },
+        function (error) {
+          document.getElementsByClassName("tool")[0].innerHTML += "<span style=\"color:red\"><b>读取失败</b></span>";
+        });
+    }
+
+    function paddingRight(str, lenght) {
+      if (str.length >= lenght)
+        return str;
+      else
+        return paddingRight(str + " ", lenght);
+    }
+
+    function chunk(data, length) {
+      var index = 0;
+      var result = [];
+      while (index < data.length) {
+        result.push(data.slice(index, index += length));
+      }
+      return result;
+    }
+    document.getElementsByName('getAlbumListByCategory')[0].onclick = function () {
+      var category = document.getElementsByName('category')[0].value;
+      var page = document.getElementsByName('page')[0].value;
+      getAlbumListByCategory(category, page);
+    };
+    document.getElementsByName('getSkipShow')[0].onclick = function () {
+      var albumID = document.getElementsByName('albumID')[0].value;
+      getSkipShow(albumID);
+    };
+    document.addEventListener('keyup', function (e) {
+      if ((e.keyCode || e.which) == 32) {
+        togglePlayState();
+      }
+    }, true);
+
+    function togglePlayState() {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    }
+
+    function previoustrack() {
+      if (document.getElementById(audio.dataset.id) != null) {
+        if (document.getElementById(audio.dataset.id).previousSibling != null) {
+          document.getElementById(audio.dataset.id).previousSibling.click();
+        }
+      }
+    }
+
+    function nexttrack() {
+      if (document.getElementById(audio.dataset.id) != null) {
+        if (document.getElementById(audio.dataset.id).nextSibling != null) {
+          document.getElementById(audio.dataset.id).nextSibling.click();
+        }
+      }
+    }
+    var os = function () {
+      var ua = navigator.userAgent,
+        isWindowsPhone = /(?:Windows Phone)/.test(ua),
+        isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+        isAndroid = /(?:Android)/.test(ua),
+        isFireFox = /(?:Firefox)/.test(ua),
+        isChrome = /(?:Chrome|CriOS)/.test(ua),
+        isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox &&
+          /(?:Tablet)/.test(ua)),
+        isiPhone = /(?:iPhone)/.test(ua) && !isTablet,
+        isPc = !isiPhone && !isAndroid && !isSymbian && !isWindowsPhone;
+      isPhone = isAndroid || isiPhone || isSymbian || isWindowsPhone;
+      return {
+        isTablet: isTablet,
+        isiPhone: isiPhone,
+        isAndroid: isAndroid,
+        isPc: isPc,
+        isPhone: isPhone,
+        isChrome: isChrome,
+        isFireFox: isFireFox
+      };
+    }();
+  </script>
+
+  <script type="text/javascript" src="https://api.imjad.cn/hitokoto/?encode=js&charset=utf-8"></script>
+
+
+  <h1 id="hitokoto" class="demo">
+    <script>
+      hitokoto()
+    </script>
+  </h1>
+  <script type="text/javascript">
+    function hitokoto() {
+      Ajax( //Ajax(type, url, data, success, failed)
+        'get',
+        'https://api.imjad.cn/hitokoto/?cat=&charset=utf-8&encode=json&fun=sync&source=',
+        '',
+        function (data) {
+          console.log(JSON.parse(data))
+          data = JSON.parse(data);
+          $("#hitokoto").html(data.hitokoto);
+        },
+        function (error) {
+          alert("读取失败！")
+        });
+    }
+  </script>
+
+  <p class="copyright">© </p>
+  <script>
+    setInterval(function () {
+      $(".copyright").html(new Date().toLocaleString())
+    }, 1000)
+  </script>
+  <script>
+    function Ajax(type, url, data, success, failed) {
+      // 创建ajax对象
+      var xhr = null;
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else {
+        xhr = new ActiveXObject('Microsoft.XMLHTTP')
+      }
+
+      var type = type.toUpperCase();
+      // 用于清除缓存
+      var random = Math.random();
+
+      if (typeof data == 'object') {
+        var str = '';
+        for (var key in data) {
+          str += key + '=' + data[key] + '&';
+        }
+        data = str.replace(/&$/, '');
+      }
+
+      if (type == 'GET') {
+        if (data) {
+          xhr.open('GET', url + '?' + data, true);
+        } else {
+          xhr.open('GET', url + '?t=' + random, true);
+        }
+        xhr.send();
+
+      } else if (type == 'POST') {
+        xhr.open('POST', url, true);
+        // 如果需要像 html 表单那样 POST 数据，请使用 setRequestHeader() 来添加 http 头。
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(data);
+      }
+
+      // 处理返回数据
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            success(xhr.responseText);
+          } else {
+            if (failed) {
+              failed(xhr.status);
+            }
+          }
+        }
+      }
+    }
+
+    Ajax( //Ajax(type, url, data, success, failed)
+      'get',
+      'https://api.imjad.cn/qqfm/counter.php',
+      '',
+      function (data) {
+        console.log(JSON.parse(data))
+      },
+      function (error) {
+        alert("读取失败！")
+      });
+  </script>
+</body>
+
+</html>

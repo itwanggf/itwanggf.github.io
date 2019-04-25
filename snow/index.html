@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="gb2312">
+    <title>css3飘雪花特效</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+        }
+
+        @keyframes snow {
+            0% {
+                background-position: 0 0, 0 0;
+            }
+
+            100% {
+                background-position: 500px 500px, 1000px 500px;
+            }
+        }
+
+        .snow {
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: url('snow1.png'), url('snow2.png');
+            animation: 10s snow linear infinite;
+        }
+
+        .box-shadow {
+            width: 200px;
+            height: 100px;
+            color: blue;
+            padding: 20px;
+            box-shadow: 0px 0.5px 10px red;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="snow">
+        <div id="CountMsg" class="box-shadow">&#9658</div>
+        <span style="color:red; font:11pt 宋体; writing-mode:tb-rl">幽冥之眼</span> 
+    </div>
+    <script type="text/javascript">
+        function getRTime() {
+            var EndTime = new Date('2019/04/18 12:00:00'); //截止时间
+            var NowTime = new Date();
+            var t = EndTime.getTime() - NowTime.getTime();
+            var d = Math.floor(t / 1000 / 60 / 60 / 24);
+            var h = Math.floor(t / 1000 / 60 / 60 % 24);
+            var m = Math.floor(t / 1000 / 60 % 60);
+            var s = Math.floor(t / 1000 % 60);
+            document.getElementById("CountMsg").innerHTML = d + "天" + h + "时" + m + "分" + s + "秒";
+        }
+        setInterval(getRTime, 1000);
+    </script>
+</body>
+
+</html>

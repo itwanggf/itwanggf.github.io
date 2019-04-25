@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/com.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<!--[if IE]>
+    <style>#cal #top{padding-top:4px;}#cal #top input{width:65px;}#cal #fd{width:170px;}</style>
+<![endif]-->
+
+<body>
+    <h1 class="demo text-shadow"> 1.文本框只能输入数字代码(小数点也不能输入)</h1>
+    <h1 class="d"> 1.文本框只能输入数字代码(小数点也不能输入)</h1>
+    <h1 class="demo" id="time"></h1>
+    <button id="dialog">这dialog永远居中</button>
+    <i class="icon-arrow"></i>
+    <div class="container">
+        <div class="dialog">
+            <div class="content">这dialog永远居中</div>
+        </div>
+    </div>
+    <table cellpadding="0" cellspacing="0" id="1">
+        <tr>
+            <td>
+                <div id="cal">
+                    <div id="top">公元 <select></select> 年 <select></select>月&nbsp;&nbsp;农历<span></span>年[<span></span>年]<input
+                            type="button" value="回到今天" title="点击后跳转回今天" style="padding:0px"></div>
+                    <ul id="wk">
+                        <li>一</li>
+                        <li>二</li>
+                        <li>三</li>
+                        <li>四</li>
+                        <li>五</li>
+                        <li><b>六</b></li>
+                        <li><b>日</b></li>
+                    </ul>
+                    <div id="cm"></div>
+                    <div id="bm">
+                        <span id="clock"></span>
+                        <a target="_blank" onmousedown="return c({'fm':'alop','title':this.innerHTML,'url':this.href,'p1':al_c(this),'p2':1})"
+                            href="javascript:void(0)">历史上的今天</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <embed wmode="transparent" src="honehone_clock_wh.swf" quality="high" bgcolor="#ffffff" width="200" height="80"
+        name="honehoneclock" align="middle" allowscriptaccess="always" type="application/x-shockwave-flash">
+    <div class="main">
+        <div class="mainTit">时钟</div>
+        <div class="block" id="test"></div>
+    </div>
+    <div>
+        1.文本框只能输入数字代码(小数点也不能输入)
+        <input onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+        <br>
+        1.文本框只能输入输入中文：
+        <input onkeyup="value=value.replace(/[^\u4E00-\u9FA5]/g,'')" onbeforepaste="this.value=this.value.replace(/[^\u4E00-\u9FA5]/g,'')">
+        <br>
+        2.只能输入数字,能输小数点.
+        <input onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')">
+        <input name=txt1 onchange="if(/\D/.test(this.value)){alert('只能输入数字');this.value='';}">
+        <br>
+        3.数字和小数点方法二
+        <input type="text" t_value="" o_value="" onkeypress="if(!this.value.match(/^[\+\-]?\d*?\.?\d*?$/))this.value=this.t_value;else this.t_value=this.value;if(this.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?)?$/))this.o_value=this.value"
+            onkeyup="if(!this.value.match(/^[\+\-]?\d*?\.?\d*?$/))this.value=this.t_value;else this.t_value=this.value;if(this.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?)?$/))this.o_value=this.value"
+            onblur="if(!this.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?|\.\d*?)?$/))this.value=this.o_value;else{if(this.value.match(/^\.\d+$/))this.value=0+this.value;if(this.value.match(/^\.$/))this.value=0;this.o_value=this.value}">
+            <br>
+        4.只能输入字母和汉字
+        <input onkeyup="value=value.replace(/[\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[\d]/g,''))"
+            maxlength=10 name="Numbers">
+            <br>
+        5.只能输入英文字母和数字,不能输入中文
+        <input onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+    </div>
+    <script src="../FM/js/jquery-3.3.1.min.js"></script>
+    <script src="main.js"></script>
+    <script src="raphael.js"></script>
+    <script src="calendar.js"></script>
+    <script>
+        var aa = '1,2,3,4,'
+        console.log(aa.slice(0,-1));
+        $("#dialog").click(() => {
+            $(".container").show()
+        })
+        $(".dialog").click(() => {
+            $(".container").hide()
+        })
+        setInterval(() => {
+            time.innerHTML = getDate()
+            clock.innerHTML = getDate()
+        }, 1000)
+        function getDate() {
+            let oDate = new Date();
+            var str = "星期" + "日一二三四五六".charAt(oDate.getDay());
+            return oDate.getFullYear() + '-' + toTen(oDate.getMonth() + 1) + '-' + toTen(oDate.getDate()) + ' ' + toTen(
+                    oDate.getHours()) + ':' + toTen(oDate.getMinutes()) + ':' + toTen(oDate.getSeconds()) + ' ' + str +
+                ' ';
+            function toTen(number) {
+                return parseInt(number) < 10 ? '0' + number : '' + number;
+            }
+        }
+    </script>
+</body>
+
+</html>

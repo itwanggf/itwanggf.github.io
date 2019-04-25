@@ -1,0 +1,662 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>网易云音乐（Cloudmusic）</title>
+  <link rel="stylesheet" href="css/github-markdown.css">
+  <style>
+    body {
+      box-sizing: border-box;
+      min-width: 200px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+
+    .markdown-body>ul {
+      list-style: none;
+      display: block;
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      font-size: 12px;
+      background-color: #fcfcfc;
+      border-radius: 2px;
+      border-style: solid;
+      border-width: 1px;
+      border-color: #d5d5d5;
+      padding: 15px 20px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .markdown-body>ul {
+        display: none;
+      }
+    }
+
+  </style>
+</head>
+
+<body class="markdown-body" id="body">
+  <script type="text/javascript">
+    document.getElementById('body').style.backgroundImage = "url('img/1 (" + new Date().getDate() + ").jpg')"
+  </script>
+  <!--favicon:./cloudmusic/favicon.png-->
+  <p>
+    <a href="index.html">企鹅FM</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="music.html">音乐</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="pixiv.html">动漫</a>
+  </p>
+  <h2 id=网易云音乐cloudmusic>网易云音乐（Cloudmusic）</h2>
+  <style>
+    a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .copyright {
+      font-size: 0.8em;
+    }
+
+    a img {
+      width: 17px;
+      height: 17px;
+    }
+
+    input[type="text"],
+    select {
+      height: 22px;
+    }
+
+    ::selection {
+      color: #414141;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+  </style>
+  <h3 id=小工具>小工具</h3>
+  <div class="tool">
+    <form>
+      搜索:
+      <input type="text" maxlength="20" name="search_text" style="width:80%;"><br>
+      类型:
+      <select name="leixin" style="width:50px;">
+        <option value="1" selected="selected">单曲</option>
+        <option value="10">专辑</option>
+        <option value="100">歌手</option>
+        <option value="1000">歌单</option>
+        <option value="1002">用户</option>
+        <option value="1004">MV</option>
+        <option value="1006">歌词</option>
+        <option value="1009">主播电台</option>
+      </select>&nbsp;
+      分页:
+      <input type="text" value="1" id="page" style="width:50px;">&nbsp;
+      <input type="button" value="搜索" onclick="search()">&nbsp;
+      <span id="search_id" style="float: left;"></span>
+      <span id="search_ids" style="float: left;"></span>
+      <div style="clear:both;height: 0;display: block;"></div>
+      <br /><br />
+      <span id="prev" class="page">上一页</span>
+      <span id="next" class="page">下一页</span>
+      <br><br /> type:
+      <select name="type" id="tt">
+        <option value="song">单曲</option>
+      </select>&nbsp; id:
+      <input type="text" maxlength="10" name="id" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+        style="width:120px;">&nbsp; br:
+      <select name="br">
+        <option value="128000" selected="selected">128000</option>
+        <option value="198000">198000</option>
+        <option value="320000">320000</option>
+      </select>&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="button" value="预览" onclick="get('view')">
+      <input type="button" value="下载" onclick="get('download')">
+    </form>
+    <p>
+      <input id="input" type="text" name="code" style="width:100%;">
+    </p>
+  </div>
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script>
+    var data = ['lyric', 'comments', 'detail', 'artist', 'album', 'playlist', 'record', 'mv', 'djradio', 'dj',
+      'detail_dj'
+    ];
+    var ty = ['歌词', '评论', '歌曲详情', '歌手', '专辑', '歌单', '听歌记录', 'mv', '主播电台', '主播电台单曲id', '主播电台歌曲详情'];
+    for (let i = 0; i < data.length; i++) {
+      $("#tt").append("<option value=" + data[i] + ">" + ty[i] + "</option>")
+    }
+
+    var num = $("#page").val();
+    $("#next").click(() => {
+      num++;
+      $("#page").val(num);
+      search()
+    })
+    $("#prev").click(() => {
+      if (num > 1) {
+        num--;
+        $("#page").val(num)
+        search()
+      }
+    })
+            $(".song").click(function () {
+              var a = document.getElementById("input")
+              console.log(a,'sss');
+              get("song")
+            })
+    
+
+    function search() {
+      document.getElementById("search_id").innerHTML = "";
+      var _mv = "type=search&search_type=" + document.getElementsByName("leixin")[0].value + "" + "&s=" + document.getElementsByName(
+        "search_text")[0].value + "&limit=20" + "&offset=" + document.getElementById("page").value;
+      Ajax( //Ajax(type, url, data, success, failed)
+        'get',
+        'https://api.imjad.cn/cloudmusic/',
+        _mv,
+        function (data) {
+          data = JSON.parse(data);
+          var da = ['songs', 'albums', 'artists', 'playlists', 'userprofiles', 'mvs', 'songs', ''];
+          switch (document.getElementsByName("leixin")[0].value) {
+            case '1':
+              songs()
+              break;
+            case '10':
+              albums()
+              break;
+            case '100':
+              artists()
+              break;
+            case '1000':
+              playlists()
+              break;
+            case '1002':
+              userprofiles()
+              break;
+            case '1004':
+              mvs()
+              break;
+            case '1006':
+              lyric()
+              break;
+            case '1009':
+              songs()
+              break;
+            default:
+              break;
+          }
+
+          function songs() {
+            for (let i = 0; i < data.result.songs.length; i++) {
+              var p = document.createElement("p");
+              p.style.marginBottom = "0";
+              p.className = "song";
+              var span = document.createElement("span");
+              span.innerHTML = i + '.' + data.result.songs[i].name + "(" + data.result.songs[i].ar[0].name + ")";
+              var span1 = document.createElement("span");
+              span1.innerHTML = data.result.songs[i].id;
+              p.append(span);
+              p.append(span1);
+              document.getElementById("search_id").append(p);
+            }
+            $(".song").click(function () {
+              var a = $("#tt option");
+              $("#tt option").removeAttr("selected")
+              for (let i = 0; i < a.length; i++) {
+                if (a[i].innerHTML == "单曲") {
+                  a[i].setAttribute("selected", "selected")
+                }
+              }
+              document.getElementsByName("id")[0].value = this.children[1].innerHTML;
+              get('view');
+              $("html, body").animate({
+                scrollTop: $("#tt").offset().top
+              }, {
+                duration: 500,
+                easing: "swing"
+              });
+              return false;
+            })
+          }
+
+          function lyric() {
+            for (let i = 0; i < data.result.songs.length; i++) {
+              var p = document.createElement("p");
+              p.style.marginBottom = "0";
+              p.className = "song";
+              var span = document.createElement("span");
+              span.innerHTML = i + '.' + data.result.songs[i].name + "(" + data.result.songs[i].ar[0].name + ")";
+              var span1 = document.createElement("span");
+              span1.innerHTML = data.result.songs[i].id;
+              p.append(span);
+              p.append(span1);
+              document.getElementById("search_id").append(p);
+            }
+            $(".song").click(function () {
+              var a = $("#tt option");
+              $("#tt option").removeAttr("selected")
+              for (let i = 0; i < a.length; i++) {
+                if (a[i].innerHTML == "歌词") {
+                  a[i].setAttribute("selected", "selected")
+                }
+              }
+              document.getElementsByName("id")[0].value = this.children[1].innerHTML;
+              get('view');
+              $("html, body").animate({
+                scrollTop: $("#tt").offset().top
+              }, {
+                duration: 500,
+                easing: "swing"
+              });
+              return false;
+            })
+          }
+          function albums() {
+            console.log(data)
+            for (let i = 0; i < data.result.albums.length; i++) {
+              var p = document.createElement("p");
+              p.style.marginBottom = "0";
+              p.className = "song";
+              var span = document.createElement("span");
+              span.innerHTML = i + '.' + data.result.albums[i].name;
+              var span1 = document.createElement("span");
+              span1.innerHTML = data.result.albums[i].id;
+              p.append(span);
+              p.append(span1);
+              document.getElementById("search_id").append(p);
+              $("#search_id").click(function () {
+                var b = document.getElementById("input").value
+                Ajax('GET',b,'',function (data) {
+                    console.log(JSON.parse(data))
+                    var aa = JSON.parse(data).songs
+                    setInterval(() => {
+                      for (let i = 0; i < aa.length; i++) {
+                      var p = document.createElement("p");
+                      p.style.marginBottom = "0";
+                      p.className = "song";
+                      var span = document.createElement("span");
+                      span.innerHTML = i + '.' + aa[i].name;
+                      var span1 = document.createElement("span");
+                      span1.innerHTML = aa[i].id;
+                      p.append(span);
+                      p.append(span1);
+                      document.getElementById("search_ids").append(p)
+                    }
+                    },1000)
+                    
+                  },function (error) {
+                    alert("读取失败！")
+                  });
+                var a = $("#tt option");
+                $("#tt option").removeAttr("selected")
+                for (let i = 0; i < a.length; i++) {
+                  if (a[i].innerHTML == "专辑") {
+                    a[i].setAttribute("selected", "selected")
+                  }
+                }
+                document.getElementsByName("id")[0].value = this.children[1].innerHTML;
+                get('view');
+                $("html, body").animate({
+                  scrollTop: $("#tt").offset().top
+                }, {
+                  duration: 500,
+                  easing: "swing"
+                });
+                return false;
+              })
+            }
+          }
+          //
+          function artists() {
+            console.log(data)
+            for (let i = 0; i < data.result.artists.length; i++) {
+              var p = document.createElement("p");
+              p.style.marginBottom = "0";
+              p.className = "song";
+              var span = document.createElement("span");
+              span.innerHTML = i + '.' + data.result.artists[i].name;
+              var span1 = document.createElement("span");
+              span1.innerHTML = data.result.artists[i].id;
+              p.append(span);
+              p.append(span1);
+              document.getElementById("search_id").append(p);
+              $(".song").click(function () {
+                var a = $("#tt option");
+                $("#tt option").removeAttr("selected")
+                for (let i = 0; i < a.length; i++) {
+                  if (a[i].innerHTML == "歌手") {
+                    a[i].setAttribute("selected", "selected")
+                  }
+                }
+                document.getElementsByName("id")[0].value = this.children[1].innerHTML;
+                get('view');
+                $("html, body").animate({
+                  scrollTop: $("#tt").offset().top
+                }, {
+                  duration: 500,
+                  easing: "swing"
+                });
+                return false;
+              })
+            }
+          }
+
+          function playlists() {
+            console.log(data)
+            for (let i = 0; i < data.result.playlists.length; i++) {
+              var p = document.createElement("p");
+              p.style.marginBottom = "0";
+              p.className = "song";
+              var span = document.createElement("span");
+              span.innerHTML = i + '.' + data.result.playlists[i].name;
+              var span0 = document.createElement("span");
+              span0.innerHTML = "(" + data.result.playlists[i].description + ")";
+              span0.style.fontSize = "13px";
+              span0.style.color = "dodgerblue";
+              var span1 = document.createElement("span");
+              span1.innerHTML = data.result.playlists[i].id;
+              p.append(span);
+              span.append(span0);
+              p.append(span1);
+              document.getElementById("search_id").append(p);
+              $(".song").click(function () {
+                var a = $("#tt option");
+                $("#tt option").removeAttr("selected")
+                for (let i = 0; i < a.length; i++) {
+                  if (a[i].innerHTML == "歌单") {
+                    a[i].setAttribute("selected", "selected")
+                  }
+                }
+                document.getElementsByName("id")[0].value = this.children[1].innerHTML;
+                get('view');
+                $("html, body").animate({
+                  scrollTop: $("#tt").offset().top
+                }, {
+                  duration: 500,
+                  easing: "swing"
+                });
+                return false;
+              })
+            }
+          }
+
+          function mvs() {
+            console.log(data)
+            for (let i = 0; i < data.result.mvs.length; i++) {
+              var p = document.createElement("p");
+              p.style.marginBottom = "0";
+              p.className = "song";
+              var span = document.createElement("span");
+              span.innerHTML = i + '.' + data.result.mvs[i].name + "(" + data.result.mvs[i].artistName + ")";
+              var span1 = document.createElement("span");
+              span1.innerHTML = data.result.mvs[i].id;
+              p.append(span);
+              p.append(span1);
+              document.getElementById("search_id").append(p);
+              $(".song").click(function () {
+                var a = $("#tt option");
+                $("#tt option").removeAttr("selected")
+                for (let i = 0; i < a.length; i++) {
+                  if (a[i].innerHTML == "mv") {
+                    a[i].setAttribute("selected", "selected")
+                  }
+                }
+                document.getElementsByName("id")[0].value = this.children[1].innerHTML;
+                get('view');
+                $("html, body").animate({
+                  scrollTop: $("#tt").offset().top
+                }, {
+                  duration: 500,
+                  easing: "swing"
+                });
+                return false;
+              })
+            }
+          }
+        },
+        function (error) {
+          document.getElementById("search_id").innerHTML = "读取失败";
+        });
+    }
+    // 搜索
+    function get(type) {
+      document.getElementsByName("code")[0].value = "https://api.imjad.cn/cloudmusic/?type=" + document.getElementsByName(
+        "type")[0].value + "&id=" + document.getElementsByName("id")[0].value + "&br=" + document.getElementsByName(
+        "br")[0].value;
+      var _get = "type=" + document.getElementsByName("type")[0].value + "&id=" + document.getElementsByName("id")[0].value +
+        "&br=" + document.getElementsByName("br")[0].value;
+      Ajax( //Ajax(type, url, data, success, failed)
+        'get',
+        'https://api.imjad.cn/cloudmusic/',
+        _get,
+        function (data) {
+          var url, a, filename;
+          data = JSON.parse(data);
+          if (document.getElementsByName("type")[0].value == 'song' || type == 'song') {
+            //data = data.data;
+            var url = data.data[0].url;
+            var filename = document.getElementsByName("id")[0].value + '.mp3';
+            if (type == 'view' || type == 'song') {
+              var a = $("audio");
+              for (let i = 0; i < a.length; i++) {
+                a[i].parentNode.removeChild(a[i])
+              }
+              var b = $("video");
+              for (let i = 0; i < b.length; i++) {
+                b[i].parentNode.removeChild(b[i])
+              }
+              addElement(document.getElementsByClassName('tool')[0], {
+                tagname: "audio",
+                style: "width:100%",
+                src: url,
+                controls: "controls",
+                autoplay: "autoplay"
+              });
+            } else if (type == 'download') {
+              download(url, filename);
+            }
+          } else if (document.getElementsByName("type")[0].value == 'lyric') {
+            lyric = data.lrc.lyric;
+            lyric = lyric.replace(/\n/g, "\r\n");
+
+            if (type == 'view') {
+              lyric = lyric.replace(/\r\n/g, "<br>")
+              //console.log(lyric);
+
+
+              addElement(document.getElementsByClassName('tool')[0], {
+                tagname: "div",
+                style: "width:100%;height:500px;overflow-y:scroll",
+                innerHTML: lyric
+              });
+              addElement(document.getElementsByClassName('tool')[0], {
+                tagname: "button",
+                style: "",
+                innerHTML: "删除"
+              });
+              $("button").click(() => {
+                $(".tool div").remove();
+                $("button").remove();
+              })
+            } else if (type == 'download') {
+              doSave(lyric, "text/plain", document.getElementsByName("id")[0].value + ".lrc");
+            }
+
+            function doSave(value, type, name) {
+              var blob;
+              if (typeof window.Blob == "function") {
+                blob = new Blob([value], {
+                  type: type
+                });
+              } else {
+                var BlobBuilder = window.BlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder || window.MSBlobBuilder;
+                var bb = new BlobBuilder();
+                bb.append(value);
+                blob = bb.getBlob(type);
+              }
+              var URL = window.URL || window.webkitURL;
+              var bloburl = URL.createObjectURL(blob);
+              var anchor = document.createElement("a");
+              if ('download' in anchor) {
+                anchor.style.visibility = "hidden";
+                anchor.href = bloburl;
+                anchor.download = name;
+                document.body.appendChild(anchor);
+                var evt = document.createEvent("MouseEvents");
+                evt.initEvent("click", true, true);
+                anchor.dispatchEvent(evt);
+                document.body.removeChild(anchor);
+              } else if (navigator.msSaveBlob) {
+                navigator.msSaveBlob(blob, name);
+              } else {
+                location.href = bloburl;
+              }
+            }
+          } else if (document.getElementsByName("type")[0].value == 'mv') {
+            //data = data.data;
+            var url = data.data.brs["720"];
+            var filename = document.getElementsByName("id")[0].value + '.mp4';
+            if (type == 'view') {
+              var a = $("audio");
+              for (let i = 0; i < a.length; i++) {
+                a[i].parentNode.removeChild(a[i])
+              }
+              var b = $("video");
+              for (let i = 0; i < b.length; i++) {
+                b[i].parentNode.removeChild(b[i])
+              }
+              addElement(document.getElementsByClassName('tool')[0], {
+                tagname: "video",
+                style: "max-width:100%",
+                src: url,
+                controls: "controls",
+                autoplay: "autoplay"
+              });
+            } else if (type == 'download') {
+              download(url, filename);
+            }
+          }
+        },
+        function (error) {
+          document.getElementsByClassName("tool")[0].innerHTML += "<span style=\"color:red\"><b>读取失败</b></span>";
+        });
+    }
+
+    function download(url, filename) {
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+    }
+
+    function addElement(obj, element) {
+      var parent = obj;
+      var child = document.createElement(element.tagname);
+      for (value in element) {
+        child[value] = element[value];
+        //console.log(child[value]);
+      }
+      parent.appendChild(child);
+      return child;
+    }
+  </script>
+  <script type="text/javascript" src="https://api.imjad.cn/hitokoto/?encode=js&charset=utf-8"></script>
+  <p id="hitokoto">
+    <script>
+      hitokoto()
+    </script>
+  </p>
+  <p class="copyright">©</p>
+  <script>
+    setInterval(function () {
+      $(".copyright").html(new Date().toLocaleString())
+    }, 1000)
+  </script>
+  <script>
+    function Ajax(type, url, data, success, failed) {
+      // 创建ajax对象
+      var xhr = null;
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else {
+        xhr = new ActiveXObject('Microsoft.XMLHTTP')
+      }
+
+      var type = type.toUpperCase();
+      // 用于清除缓存
+      var random = Math.random();
+
+      if (typeof data == 'object') {
+        var str = '';
+        for (var key in data) {
+          str += key + '=' + data[key] + '&';
+        }
+        data = str.replace(/&$/, '');
+      }
+
+      if (type == 'GET') {
+        if (data) {
+          xhr.open('GET', url + '?' + data, true);
+        } else {
+          xhr.open('GET', url + '?t=' + random, true);
+        }
+        xhr.send();
+
+      } else if (type == 'POST') {
+        xhr.open('POST', url, true);
+        // 如果需要像 html 表单那样 POST 数据，请使用 setRequestHeader() 来添加 http 头。
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(data);
+      }
+
+      // 处理返回数据
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            success(xhr.responseText);
+          } else {
+            if (failed) {
+              failed(xhr.status);
+            }
+          }
+        }
+      }
+    }
+
+    Ajax( //Ajax(type, url, data, success, failed)
+      'get',
+      'https://api.imjad.cn/cloudmusic/counter.php',
+      '',
+      function (data) {
+        data = JSON.parse(data);
+        console.log(data)
+      },
+      function (error) {
+        var spans = document.getElementsByClassName("update")[0].getElementsByTagName("span");
+        for (var i = 0; i < spans.length; i++) {
+          spans[i].innerHTML = "读取失败";
+        }
+      });
+
+    function switch1(a) {
+      document.getElementsByClassName("content new")[0].style.display = "block";
+      document.getElementsByClassName("content old")[0].style.display = "none";
+      a.className += " checked";
+      document.getElementsByClassName("old")[0].className = document.getElementsByClassName("old")[0].className.replace(
+        /(?:^|\s)checked(?!\S)/g, '');
+    }
+
+    function switch2(a) {
+      document.getElementsByClassName("content new")[0].style.display = "none";
+      document.getElementsByClassName("content old")[0].style.display = "block";
+      a.className += " checked";
+      document.getElementsByClassName("new")[0].className = document.getElementsByClassName("new")[0].className.replace(
+        /(?:^|\s)checked(?!\S)/g, '');
+    }
+  </script>
+</body>
+
+</html>

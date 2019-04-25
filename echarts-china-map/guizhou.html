@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>贵州省</title>
+</head>
+<body><div id="map" style="width:800px;height: 500px;"></div>
+<script src="https://img.hcharts.cn/highmaps/highmaps.js"></script>
+<script src="https://data.jianshukeji.com/geochina/guizhou.js"></script>
+<script>
+// 随机数据
+var data = [{"name":"贵阳","value":11},{"name":"六盘水","value":59},{"name":"遵义","value":96},{"name":"安顺","value":96},{"name":"毕节","value":61},{"name":"铜仁","value":43},{"name":"黔西","value":20},{"name":"黔东","value":74},{"name":"黔","value":10}];
+// 初始化图表
+var map = new Highcharts.Map('map', {
+  title: {
+    text: '贵州省'
+  },
+  colorAxis: {
+    min: 0,
+    minColor: 'rgb(255,255,255)',
+    maxColor: '#006cee'
+  },
+  series: [{
+    data: data,
+    name: '随机数据',
+    mapData: Highcharts.maps['cn/guizhou'],
+    joinBy: 'name' // 根据 name 属性进行关联
+  }]
+});
+</script></body></html>

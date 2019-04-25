@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>WebSockets客户端示例</title>
+</head>
+<script>
+    var webSocket;
+
+    function connect() {
+        try {
+            var readyState = new Array("正在连接", "已建立连接", "正在关闭连接", "已关闭连接");
+            var host = "ws://127.0.0.1:7181";
+            webSocket = new WebSocket(host);
+            var message = document.getElementById("message");
+            message.innerHTML += "<p>Socket状态：" + readyState[webSocket.readyState] + "</p>";
+            webSocket.onopen = function () {
+                message.innerHTML += "<p>Socket状态：" + readyState[webSocket.readyState] + "</p>";
+            }
+            webSocket.onmessage = function (msg) {
+                message.innerHTML += "<p>接收信息：" + msg.data + "</p>";
+            }
+            webSocket.onclose = function () {
+                message.innerHTML += "<p>Socket状态：" + readyState[webSocket.readyState] + "</p>";
+            }
+        } catch (exception) {
+            message.innerHTML += "<p>有错误发生</p>";
+        }
+    }
+
+    function send() {
+        var message = document.getElementById("message");
+        var dataList = {
+            'type': '00', //修改这里可以完成不同操作
+            'data': {
+                'number': 33333333,
+                'name': '阿秀米克',
+                'm11Key': 'hbfDOQCQ', //hbfDOQCQ p6dKfbjJ 7dMx3ER4  wf中学I9oloxek
+                'controlKey': '11111122',
+                'enableTime': '2017-01-25',
+                'endTime': '2019-09-01',
+                'consumerPwd': 222222,
+                'singleLimit': 30,
+                'dailyLimit': 60,
+                'cardStatus': 1,
+                'cardType': 3,
+                'type': 1,
+                'money': 10,
+                'validDate': '2019-02-02'
+            }
+        }
+
+        try {
+            webSocket.send(JSON.stringify(dataList));
+            message.innerHTML += "<p>发送数据：" + JSON.stringify(dataList) + "</p>";
+        } catch (exception) {
+            message.innerHTML += "<p>发送数据出错</p>";
+        }
+    }
+
+    function disconnect() {
+        webSocket.close();
+    }
+</script>
+
+<body>
+    <h1>WebSocket客户端示例</h1>
+    <div id="message"></div>
+    <button id="connect" onClick="connect();">建立连接</button>
+    <button id="send" onClick="send();">发送数据</button>
+    <button id="disconnect" onClick="disconnect();">断开连接</button><br />
+    <input type='file' multiple onChange="compress" />
+    <input type="button" value="下载">
+    <div id="view"></div>
+    <progress id="Progress" value="0" max="100"></progress>
+    <input type="file" name="file" onchange="showPreview(this)" />
+    <img id="portrait" src="img/1.png" width="20%" height="auto">
+
+
+    <script>
+        function showPreview(source) {
+            var file = source.files[0];
+            console.log(file);
+            if (window.FileReader) {
+                var fr = new FileReader();
+                fr.onloadend = function (e) {
+                    //                console.log(this.result);
+                    document.getElementById("portrait").src = e.target.result;
+                };
+                //给FileReader对象一个读取完成的方法,使用readAsDataURL会返回一个url,这个值就保存在事件对象的result里,img通过加载这个地址,完成图片的加载
+                fr.readAsDataURL(file);
+            }
+            var total = source.files[0].size;
+            fr.onprogress = function (ev) {
+                // 简单测试了一下 大概12M左右的传输速度
+                // 推荐测试的时候用一个视频
+                console.log(ev.loaded / total);
+                var loading = (ev.loaded / total) * 100;
+                document.getElementById("Progress").value = loading;
+            }
+        }
+
+        var fileList = []
+        document.querySelector("input").onchange = function (e) {
+            var files = this.files;
+            var div = document.getElementById("view")
+            for (let i = 0; i < files.length; i++) {
+                console.log(files[i]);
+                fileList[i] = files[i]
+                if (handleLookType(files[i].type) === 'mov') {
+                    var video = document.createElement("video")
+                    video.src = window.URL.createObjectURL(files[i])
+                    video.controls = 'controls'
+                    video.autoplay = 'autoplay'
+                    div.appendChild(video);
+                } else {
+                    var img = document.createElement("img")
+                    img.style.width = '20%'
+                    img.src = handleLookType(files[i].type) === 'pic' ? window.URL.createObjectURL(files[i]) :
+                        'img/1.png'
+                    div.appendChild(img);
+                }
+                var span = document.createElement("span")
+                span.innerHTML = files[i].name
+                div.appendChild(span);
+            }
+            console.log(fileList);
+
+            document.querySelector("input[type=button]").onclick = function () {
+                for (let i = 0; i < fileList.length; i++) {
+                    funcDownload(fileList[i], fileList[i].name)
+                }
+            }
+        }
+        // 获取上传进度
+        function onprogress(event) {
+            console.log(event.loaded)
+            console.log(event.total)
+            if (event.lengthComputable) {
+                var percent = Math.floor(event.loaded / event.total * 100);
+                document.querySelector("#progress .progress-item").style.width = percent + "%";
+                // 设置进度显示
+                console.log(percent)
+            }
+        };
+
+        // 文件类型className返回
+        function handleLookType(type) {
+            var imgs = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'image/gif', 'image/jpeg', 'image/png', 'image'],
+                videos = ['mp4', 'rmvb', 'avi', 'ts', '3gp', 'flv', 'mpeg', 'm2v', 'mkv', 'video/mp4', 'video'];
+            if (imgs.indexOf(type) != -1) {
+                return 'pic'
+            } else if (videos.indexOf(type) != -1) {
+                return 'mov'
+            } else {
+                return 'file'
+            }
+        }
+
+        function funcDownload(content, filename) {
+            // 创建隐藏的可下载链接
+            var eleLink = document.createElement('a');
+            eleLink.download = filename;
+            eleLink.style.display = 'none';
+            // 字符内容转变成blob地址
+            var blob = new Blob([content]);
+            eleLink.href = URL.createObjectURL(blob);
+            // 触发点击
+            document.body.appendChild(eleLink);
+            eleLink.click();
+            // 然后移除
+            document.body.removeChild(eleLink);
+        }
+    </script>
+</body>
+
+</html>

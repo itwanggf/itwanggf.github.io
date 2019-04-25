@@ -1,0 +1,293 @@
+article,
+aside,
+blockquote,
+body,
+button,
+code,
+dd,
+details,
+div,
+dl,
+dt,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+hr,
+input,
+legend,
+li,
+menu,
+nav,
+ol,
+p,
+pre,
+section,
+td,
+textarea,
+th,
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+i {
+  font-style: normal
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "微软雅黑", "Microsoft YaHei", "PingFang SC";
+  /* font-weight: 400; */
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
+.ft12 {
+  font-size: 12px;
+}
+
+.ft16 {
+  font-size: 18px;
+}
+
+.ft16 {
+  font-size: 18px;
+}
+
+.ft20 {
+  font-size: 20px;
+}
+
+/* 省略类名 */
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 按钮样式 */
+.btn {
+  display: inline-block;
+  padding: 9px 18px 9px 18px;
+  color: rgba(248, 248, 248, 1);
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btnReset {
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn1 {
+  background: rgba(74, 135, 193, 1);
+}
+
+.btn2 {
+  background: rgba(69, 195, 173, 1);
+}
+
+.btn3 {
+  background: rgba(112, 181, 135, 1);
+}
+
+.btn4 {
+  background: rgba(69, 195, 173, 1);
+}
+
+/* 文字按钮及状态文字 */
+.textBtnDel {
+  font-size: 14px;
+  color: rgba(255, 27, 27, 1);
+  cursor: pointer;
+}
+
+.textBtnAdd {
+  font-size: 14px;
+  color: #1575d0;
+  cursor: pointer;
+}
+
+.textBtnLook {
+  font-size: 14px;
+  color: #3D6196;
+  cursor: pointer;
+}
+
+.textState1 {
+  font-size: 14px;
+  color: #FF8401;
+}
+
+.textState2 {
+  font-size: 14px;
+  color: #70b587;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btns .m {
+  margin: 0 4px;
+  cursor: default;
+}
+
+
+/* 表格样式 */
+.table {
+  overflow: auto;
+}
+
+.table .el-table::before {
+  display: none;
+}
+
+.table .tableTou {
+  height: 70px;
+  background: rgba(244, 245, 250, 1);
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
+  text-align: center;
+  border-bottom: none !important;
+}
+
+
+.istable .el-table td,
+.el-table th.is-leaf {
+  border-bottom: solid 1px #eeeeee;
+
+}
+
+
+.istable .tableTou {
+  height: 70px;
+  background: #fff;
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(111, 121, 146, 1);
+  text-align: center;
+  border-bottom: none !important;
+}
+
+.table .tableRow {
+  height: 54px;
+  font-size: 14px;
+  color: #666;
+  border-bottom: 1px solid rgba(238, 238, 238, 1);
+}
+
+/* 分页样式 */
+.fenye {
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fenye_title {
+  font-size: 14px;
+  color: rgba(164, 168, 179, 1);
+  margin-left: 81px;
+}
+
+.fenye .el-pagination {
+  margin-right: 83px;
+}
+
+.fenye .el-pager li {
+  color: #666666;
+  font-size: 14px;
+}
+
+.fenye .el-pager li:hover {
+  color: #4A87C1;
+  font-size: 14px;
+}
+
+.fenye .el-pager li.active {
+  color: #4A87C1;
+}
+
+/* dialog */
+.pwdDialog {
+  width: 547px;
+  height: 410px;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+  box-shadow: 0px 0px 120px 0px rgba(31, 32, 41, 0.05);
+}
+
+.pwdDialog .el-dialog__header {
+  border-radius: 10px 10px 0px 0px;
+  height: 65px;
+  background: rgba(70, 103, 157, 1);
+
+}
+
+.pwdDialog .el-dialog__title {
+  font-size: 22px;
+  color: rgba(255, 255, 255, 1);
+}
+
+.pwdDialog .el-icon-close:before {
+  content: url(../../../static/img/provincial/cls.png);
+}
+
+/* dialog表单 */
+.dialogForm {
+  padding-left: 50px;
+  margin-top: 15px;
+}
+
+.dialogForm .el-form-item {
+  margin-bottom: 29px;
+}
+
+.dialogForm .el-form-item__label {
+  /*font-size: 14px;
+	color: #666666;*/
+}
+
+.dialogForm .el-input {
+  width: 244px;
+  height: 40px;
+}
+
+.dialogForm .el-dialog__body {
+  padding: 0 !important;
+}
+
+.el-dialog--center .el-dialog__body {
+  padding-bottom: 0;
+}
+
+
