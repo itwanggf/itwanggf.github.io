@@ -1,9 +1,5 @@
 <template>
     <div class="about">
-         <div id="nav">
-            <router-link to="/">Home</router-link>|
-            <router-link to="/about">About</router-link>
-        </div>
         <h1>用户名:{{ user.name}}</h1>
         <img :src="user.portrait" alt>
         <p class="msg">
