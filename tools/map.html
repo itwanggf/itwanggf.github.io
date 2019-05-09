@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=5yTMLIZEcKHYuPFV4ME03XGBlqH1h2DT"></script>
+    <!-- <script src="http://api.map.baidu.com/api?v=2.0&ak=RKVMcKG7V23ABjbKnvOGyjY5GGaj0eLL"></script> -->
+    <script src="../resume/js/jquery.min.js"></script>
+</head>
+
+<body class="whitebg">
+    <header class="mui-bar-nav" onclick="rec_list()">
+        <h1 class="mui-title" style="width:100%;">课程签到</h1>
+        <a href="#" class="mui-action-back  mui-pull-left" style="line-height:50px;">
+            <span class="mui-icon mui-icon-left-nav"></span>返回</a>
+    </header>
+    <div id="container" style="width:800px;height:500px"></div>
+    <div id="foot">
+        <p class="sign">签到</p>
+        <p class="relocate">重新定位</p>
+    </div>
+    <script>
+        $(function () {
+            initMap();
+            
+            $(".sign").click(function () {
+                getTSDistance();
+            });
+
+            $(".relocate").click(function () {
+                relocate();
+            });
+        });
+        var map = "";
+
+        function initMap() {
+
+            //初始化地图
+            // var map = new BMap.Map("allmap", {enableMapClick:false});//构造底图时，关闭底图可点功能 
+            map = new BMap.Map("container");
+            var point = new BMap.Point(120.38442818, 36.1052149);
+            map.centerAndZoom(point, 15);
+
+            //这段代码可以控制地图在浏览器或者安卓手机下也能够精准定位到当前所在位置
+            //前提是使用https协议的网站
+            var navigationControl = new BMap.NavigationControl({
+                type: BMAP_NAVIGATION_CONTROL_LARGE,
+                enableGeolocation: true
+            });
+            map.addControl(navigationControl);
+
+            map.addControl(new BMap.ScaleControl()); //添加左下方比例尺控件
+            map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+            // map.setCurrentCity("贵阳");          // 设置地图显示的城市
+
+            //添加事件
+            var pointA = []
+            map.addEventListener("click", function (e) {
+                pointA.push(e.point)
+                var mk = new BMap.Marker(e.point);
+                map.addOverlay(mk);
+                var polyline = new BMap.Polyline(pointA.length <= 2 ? pointA : ([pointA[pointA.length - 2],
+                    pointA[pointA.length - 1]
+                ]), {
+                    strokeColor: "blue",
+                    strokeWeight: 6,
+                    strokeOpacity: 0.5
+                });
+                map.addOverlay(polyline);
+                alert('您点击了标注,距离是：' + (map.getDistance(pointA[0], pointA[pointA.length - 1])).toFixed(2) +
+                    ' 米。'); //获取两点距离,保留小数点后两位
+                //给覆盖物添加右键菜单
+                var removeMarker = function (e, ee, marker) {
+                    map.removeOverlay(marker);
+                }
+                //创建右键菜单
+                var markerMenu = new BMap.ContextMenu();
+                markerMenu.addItem(new BMap.MenuItem('删除', removeMarker.bind(mk)));
+
+                mk.addContextMenu(markerMenu);
+            });
+            var menu = new BMap.ContextMenu();
+            var txtMenuItem = [{
+                    text: '放大',
+                    callback: function () {
+                        map.zoomIn()
+                    }
+                },
+                {
+                    text: '缩小',
+                    callback: function () {
+                        map.zoomOut()
+                    }
+                }
+            ];
+            for (var i = 0; i < txtMenuItem.length; i++) {
+                menu.addItem(new BMap.MenuItem(txtMenuItem[i].text, txtMenuItem[i].callback, 100));
+            }
+            map.addContextMenu(menu);
+            //定位到当前地址
+            var geolocation = new BMap.Geolocation();
+            geolocation.getCurrentPosition(function (r) {
+                console.log(this.getStatus(), r, '定位');
+                showLocationInMap(this.getStatus(), r);
+            }, {
+                enableHighAccuracy: true
+            })
+        }
+        //地图展示当前位置
+        var accuracy = "";
+        var longitude = "";
+        var latitude = "";
+        var actual_address = "";
+
+        function showLocationInMap(status, r, index) {
+
+            if (status == BMAP_STATUS_SUCCESS) { //检索成功。对应数值“0”。
+                var mk = new BMap.Marker(r.point);
+                //设置marker的样式与偏移
+                var myIcon = new BMap.Icon("img/1.png", new BMap.Size(16, 16), {
+                    offset: new BMap.Size(10, 25), // 图标中央下端的尖角位置。
+                    imageOffset: new BMap.Size(3, 0 - index * 25) // 设置图片偏移
+                });
+                var opts = {
+                    width: 200, // 信息窗口宽度
+                    height: 100, // 信息窗口高度
+                    title: "海底捞王府井店", // 信息窗口标题
+                    enableMessage: true, //设置允许信息窗发送短息
+                    message: "亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~",
+                    position: r.point, // 指定文本标注所在的地理位置
+                    offset: new BMap.Size(30, -30) //设置文本偏移量
+                }
+                var sContent =
+                    "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>天安门</h4>" +
+                    "<img style='float:right;margin:4px' id='imgDemo' src='http://app.baidu.com/map/images/tiananmen.jpg' width='139' height='104' title='天安门'/>" +
+                    "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>天安门坐落在中国北京市中心,故宫的南侧,与天安门广场隔长安街相望,是清朝皇城的大门...</p>" +
+                    "</div>";
+                var infoWindow = new BMap.InfoWindow(sContent); // 创建信息窗口对象 
+                var label = new BMap.Label("欢迎使用百度地图，这是一个简单的文本标注哦~", opts); // 创建文本标注对象
+                label.setStyle({
+                    color: "red",
+                    fontSize: "12px",
+                    height: "20px",
+                    lineHeight: "20px",
+                    fontFamily: "微软雅黑"
+                });
+                map.addOverlay(label);
+                map.addOverlay(mk, {
+                    icon: myIcon
+                });
+                map.panTo(r.point);
+                //添加事件
+                mk.addEventListener("click", function (e) {
+                    map.openInfoWindow(infoWindow, r.point); //开启信息窗口
+                    alert("您点击了标注", e.point.lng + ", " + e.point.lat);
+                });
+                accuracy = r.accuracy;
+                longitude = r.point.lng;
+                latitude = r.point.lat;
+
+
+                //用所定位的经纬度查找所在地省市街道等信息
+                var point = new BMap.Point(r.point.lng, r.point.lat);
+                var gc = new BMap.Geocoder();
+                gc.getLocation(point, function (rs) {
+                    console.log(point, rs, '查找');
+                    var addComp = rs.addressComponents;
+                    //console.log(rs.address);//地址信息
+                    actual_address = rs.address;
+                    var address = new BMap.Label(actual_address + rs.surroundingPois[0].title, {
+                        offset: new BMap.Size(-80, -25)
+                    });
+                    mk.setLabel(address); //添加地址标注
+                });
+
+            } else if (status == BMAP_STATUS_CITY_LIST) { //城市列表。对应数值“1”。
+                alert("城市列表", 0);
+            } else if (status == BMAP_STATUS_UNKNOWN_LOCATION) { //位置结果未知。对应数值“2”。
+                alert("位置结果未知", 0);
+            } else if (status == BMAP_STATUS_UNKNOWN_ROUTE) { //导航结果未知。对应数值“3”。
+                alert("导航结果未知", 0);
+            } else if (status == BMAP_STATUS_INVALID_KEY) { //非法密钥。对应数值“4”。
+                alert("非法密钥", 0);
+            } else if (status == BMAP_STATUS_INVALID_REQUEST) { //非法请求。对应数值“5”。
+                alert("非法请求", 0);
+            } else if (status == BMAP_STATUS_PERMISSION_DENIED) { //没有权限。对应数值“6”。(自 1.1 新增)
+                alert("没有权限", 0);
+            } else if (status == BMAP_STATUS_SERVICE_UNAVAILABLE) { //服务不可用。对应数值“7”。(自 1.1 新增)
+                alert("服务不可用", 0);
+            } else if (status == BMAP_STATUS_TIMEOUT) { //超时。对应数值“8”。(自 1.1 新增)
+                alert("超时", 0);
+            } else {
+                alert("未知错误", 0);
+            }
+        }
+
+        function LocalSearch() {
+            var local = new BMap.LocalSearch(map, {
+                renderOptions: {
+                    map: map
+                }
+            });
+            local.searchInBounds("银行", map.getBounds());
+        }
+
+        /**
+         * 点击签到，先获取老师和目前定位地址的距离
+         */
+        var distance = 0;
+
+        function getTSDistance() {
+
+            $.ajax({
+                type: "POST",
+                url: rootPath + "/attendance/getAttendanceByAuId",
+                data: {
+                    'att_user_id': att_user_id
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data.isSuccess) {
+
+                        var tec_longitude = data.attendance.longitude;
+                        var tec_latitude = data.attendance.latitude;
+
+                        var pointTeacher = new BMap.Point(tec_longitude, tec_latitude);
+                        var pointStudent = new BMap.Point(longitude, latitude);
+                        distance = (map.getDistance(pointTeacher, pointStudent)).toFixed(2);
+
+                        //执行签到
+                        sign();
+                    } else {
+                        alert(data.msgCode, 0);
+                    }
+                }
+            });
+
+
+        }
+
+        /**
+         * 签到
+         */
+        function sign() {
+            common.alertMsg("正在签到，请稍候...", 0);
+
+            console.log(accuracy)
+            console.log(longitude)
+            console.log(latitude)
+            console.log(actual_address)
+            console.log(distance)
+
+            $.ajax({
+                type: "POST",
+                url: rootPath + "/attendance/gpsSignIn",
+                data: {
+                    'att_user_id': att_user_id,
+                    'accuracy': accuracy,
+                    'longitude': longitude,
+                    'latitude': latitude,
+                    'address': actual_address,
+                    'distance': distance
+                },
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    if (data.isSuccess) {
+                        alert("签到成功，3秒后跳到列表页", 0);
+                        setTimeout(rec_list, 3000);
+                    } else {
+                        alert(data.msgCode, 0);
+                    }
+                }
+            });
+        }
+
+        /**
+         * 重新定位
+         */
+        function relocate() {
+            alert("正在重新定位，请稍候...", 0);
+            //定位到当前地址
+            var geolocation = new BMap.Geolocation();
+            geolocation.getCurrentPosition(function (r) {
+                console.log(r);
+                showLocationInMap(this.getStatus(), r);
+            }, {
+                enableHighAccuracy: true
+            })
+            alert("定位成功", 0);
+        }
+    </script>
+</body>
+
+</html>

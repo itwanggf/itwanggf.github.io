@@ -908,7 +908,7 @@
       Ajax( //Ajax(type, url, data, success, failed)
         'get',
         'https://api.imjad.cn/qqfm/v1/',
-        'type=album&page_size=10&id=' + id + '&page=' + page,
+        'type=album&page_size=20&id=' + id + '&page=' + page,
         function (data) {
           data = JSON.parse(data);
           console.log(data);
@@ -976,7 +976,7 @@
         'type=show&id=' + albumID,
         function (data) {
           data = JSON.parse(data);
-          arr_shows = chunk(data, 10)[index];
+          arr_shows = chunk(data, 20)[index];
 
           var shows = '';
           for (var i = 0; i < arr_shows.length; i++) {
