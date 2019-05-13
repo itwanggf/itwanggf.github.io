@@ -70,79 +70,53 @@
     <button id="connect" onClick="connect();">建立连接</button>
     <button id="send" onClick="send();">发送数据</button>
     <button id="disconnect" onClick="disconnect();">断开连接</button><br />
-    <input type='file' multiple onChange="compress" />
-    <input type="button" value="下载">
-    <div id="view"></div>
+    <input type='file' multiple onchange="view(this.files)" />
     <progress id="Progress" value="0" max="100"></progress>
-    <input type="file" name="file" onchange="showPreview(this)" />
-    <img id="portrait" src="img/1.png" width="20%" height="auto">
-
+    <input type="button" value="下载" onclick="download()">
+    <div id="view"></div>
 
     <script>
-        function showPreview(source) {
-            var file = source.files[0];
-            console.log(file);
-            if (window.FileReader) {
-                var fr = new FileReader();
-                fr.onloadend = function (e) {
-                    //                console.log(this.result);
-                    document.getElementById("portrait").src = e.target.result;
-                };
-                //给FileReader对象一个读取完成的方法,使用readAsDataURL会返回一个url,这个值就保存在事件对象的result里,img通过加载这个地址,完成图片的加载
-                fr.readAsDataURL(file);
-            }
-            var total = source.files[0].size;
-            fr.onprogress = function (ev) {
-                // 简单测试了一下 大概12M左右的传输速度
-                // 推荐测试的时候用一个视频
-                console.log(ev.loaded / total);
-                var loading = (ev.loaded / total) * 100;
-                document.getElementById("Progress").value = loading;
-            }
-        }
-
         var fileList = []
-        document.querySelector("input").onchange = function (e) {
-            var files = this.files;
-            var div = document.getElementById("view")
-            for (let i = 0; i < files.length; i++) {
-                console.log(files[i]);
-                fileList[i] = files[i]
-                if (handleLookType(files[i].type) === 'mov') {
-                    var video = document.createElement("video")
-                    video.src = window.URL.createObjectURL(files[i])
-                    video.controls = 'controls'
-                    video.autoplay = 'autoplay'
-                    div.appendChild(video);
-                } else {
-                    var img = document.createElement("img")
-                    img.style.width = '20%'
-                    img.src = handleLookType(files[i].type) === 'pic' ? window.URL.createObjectURL(files[i]) :
-                        'img/1.png'
-                    div.appendChild(img);
-                }
-                var span = document.createElement("span")
-                span.innerHTML = files[i].name
-                div.appendChild(span);
-            }
-            console.log(fileList);
-
-            document.querySelector("input[type=button]").onclick = function () {
-                for (let i = 0; i < fileList.length; i++) {
-                    funcDownload(fileList[i], fileList[i].name)
-                }
+        var div = document.getElementById("view")
+        
+        function download() {
+            for (let i = 0; i < fileList.length; i++) {
+                funcDownload(fileList[i], fileList[i].name)
             }
         }
-        // 获取上传进度
-        function onprogress(event) {
-            console.log(event.loaded)
-            console.log(event.total)
-            if (event.lengthComputable) {
-                var percent = Math.floor(event.loaded / event.total * 100);
-                document.querySelector("#progress .progress-item").style.width = percent + "%";
-                // 设置进度显示
-                console.log(percent)
+        // 查看上传预览
+        function view(files) {
+            for (let i = 0; i < files.length; i++) {
+                fileList.push(files[i])
+                let fr = new FileReader();
+                fr.readAsDataURL(files[i])
+                fr.onloadend = function (e) {
+                    if (handleLookType(files[i].type) === 'mov') {
+                        var video = document.createElement("video")
+                        video.src = window.URL.createObjectURL(files[i])
+                        video.controls = 'controls'
+                        video.autoplay = 'autoplay'
+                        div.appendChild(video);
+                    } else {
+                        var img = document.createElement("img")
+                        img.style.width = '10%'
+                        img.src = handleLookType(files[i].type) === 'pic' ? window.URL.createObjectURL(files[i]) :
+                            'img/1.png'
+                        div.appendChild(img);
+                    }
+                    var span = document.createElement("span")
+                    span.innerHTML = files[i].name
+                    div.appendChild(span);
+                };
+                fr.onprogress = function (ev) {
+                    var percent = Math.floor(event.loaded / event.total * 100);
+                    document.getElementById('Progress').value = percent;
+                    document.querySelector("input[type=file]").onclick = function () {
+                        document.getElementById('Progress').value = 0;
+                    }
+                }
             }
+            console.log(fileList,files);
         };
 
         // 文件类型className返回

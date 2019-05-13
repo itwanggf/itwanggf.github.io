@@ -106,6 +106,13 @@
                 return parseInt(number) < 10 ? '0' + number : '' + number;
             }
         }
+        var d = '一二三四五六日'
+        var week = []
+        var s = '123'
+        s.split('').forEach(v => {
+            week.push('周'+d.charAt(v-1))
+        });
+        console.log(week);
     </script>
 </body>
 
