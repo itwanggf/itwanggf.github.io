@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>企鹅FM</title>
   <link rel="shortcut icon" href="img/favicon.png">
   <link rel="stylesheet" href="css/github-markdown.css">
@@ -17,26 +18,27 @@
       background-image: url('img/1 (1).jpg');
       background-size: 100%;
     }
-    
-  .demo {
-    width: 100%;
-    height: 100%;
-    background-image: -webkit-linear-gradient(left, green, purple 25%, green 50%, purple 75%, green);
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
-    -webkit-background-size: 200% 100%;
-    -webkit-animation: masked-animation 3s infinite linear;
-  }
 
-  @-webkit-keyframes masked-animation {
-    0% {
-      background-position: 0 0;
+    .demo {
+      width: 100%;
+      height: 100%;
+      background-image: -webkit-linear-gradient(left, green, purple 25%, green 50%, purple 75%, green);
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-background-size: 200% 100%;
+      -webkit-animation: masked-animation 3s infinite linear;
     }
 
-    100% {
-      background-position: -100% 0;
+    @-webkit-keyframes masked-animation {
+      0% {
+        background-position: 0 0;
+      }
+
+      100% {
+        background-position: -100% 0;
+      }
     }
-  }
+
     .markdown-body>ul {
       list-style: none;
       display: block;
@@ -50,9 +52,11 @@
       border-color: #d5d5d5;
       padding: 10px 15px;
     }
-    .markdown-body>ul>li>ul>li>ul{
+
+    .markdown-body>ul>li>ul>li>ul {
       list-style: none;
     }
+
     @media screen and (max-width: 768px) {
       .markdown-body>ul {
         /* display: none; */
@@ -76,9 +80,12 @@
       color: #333;
       text-decoration: none;
     }
-    a,td{
+
+    a,
+    td {
       cursor: pointer;
     }
+
     .copyright {
       font-size: 0.8em;
     }
@@ -101,9 +108,11 @@
     div#getAlbumList {
       display: inline-block;
     }
-.tools{
-  display: flex;
-}
+
+    .tools {
+      display: flex;
+    }
+
     .tool ul {
       /*white-space:pre;*/
       list-style: none;
@@ -134,7 +143,7 @@
     .tool ul>li.focus {
       background-color: #ddd;
     }
-    
+
     span.page {
       display: inline-block;
       margin-right: 20px;
@@ -172,7 +181,6 @@
     video::-webkit-media-controls-panel {
       width: calc(100% + 30px);
     }
-
   </style>
   <ul>
     <li>
@@ -852,10 +860,12 @@
     <div class="tools">
       <div id="getAlbumList">
         分类:
-        <input type="text" name="category" value="4" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+        <input type="text" name="category" value="4" onkeyup="this.value=this.value.replace(/\D/g,'')"
+          onafterpaste="this.value=this.value.replace(/\D/g,'')"
           onkeypress="if(event.keyCode==13){document.getElementsByName('getAlbumListByCategory')[0].click();return false;}"
           maxlength="5">&nbsp;
-        <input type="text" name="page" value="1" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+        <input type="text" name="page" value="1" onkeyup="this.value=this.value.replace(/\D/g,'')"
+          onafterpaste="this.value=this.value.replace(/\D/g,'')"
           onkeypress="if(event.keyCode==13){document.getElementsByName('getAlbumListByCategory')[0].click();return false;}"
           style="width:30px">&nbsp;
         <input type="button" name="getAlbumListByCategory" value="获取专辑列表">
@@ -869,7 +879,8 @@
       <div id="getSkipShow">
         详情:
         <input type="text" name="albumID" value="" onkeyup="this.value=this.value.replace(/[^\w\.\/]/ig,'')"
-          onafterpaste="this.value=this.value.replace(/[^\w\.\/]/ig,'')" onkeypress="if(event.keyCode==13){document.getElementsByName('getSkipShow')[0].click();return false;}">&nbsp;
+          onafterpaste="this.value=this.value.replace(/[^\w\.\/]/ig,'')"
+          onkeypress="if(event.keyCode==13){document.getElementsByName('getSkipShow')[0].click();return false;}">&nbsp;
         <input type="button" name="getSkipShow" value="获取节目列表">
         <br>
         <ul id="Shows"></ul>
@@ -897,9 +908,9 @@
         $("html, body").animate({
           scrollTop: $("#getAlbumList").offset().top
         }, {
-          duration: 500,
-          easing: "swing"
-        });
+            duration: 500,
+            easing: "swing"
+          });
         return false;
       }, false)
     }
@@ -933,9 +944,9 @@
               $("html, body").animate({
                 scrollTop: $("#Shows").offset().top
               }, {
-                duration: 500,
-                easing: "swing"
-              });
+                  duration: 500,
+                  easing: "swing"
+                });
               return false;
             }
             list.innerText = i + 1 + '.' + arr[i].album.name;
@@ -1039,7 +1050,7 @@
                         src: this.dataset.cover,
                         sizes: '720x720',
                         type: 'image/jpeg'
-                      }, ]
+                      },]
                     });
 
                     navigator.mediaSession.setActionHandler('play', function () {
