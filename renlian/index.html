@@ -2,7 +2,7 @@
  * @Author: wgf
  * @Date: 2019-12-12 17:59:27
  * @LastEditors: wgf
- * @LastEditTime: 2019-12-12 18:01:19
+ * @LastEditTime: 2019-12-12 19:05:43
  * @Descripttion: 
  * @FilePath: \renlian\index.html
  -->
@@ -15,5 +15,37 @@
 <body>
 <a href="register.html">注册</a>
 <a href="login.html">登录</a>
+<script>
+    //js 复制粘贴文章时添加版权信息
+    function setClipboardText(event){
+     event.preventDefault();
+     var node = document.createElement('div');      
+     node.appendChild(window.getSelection().getRangeAt(0).cloneContents());       
+     var htmlData = '<div>'
+         + node.innerHTML           
+         + '<br /><br />---------------------------------------------------------------------<br />'
+         + '本文由 Savalone 原创或搜集整理发表，转载请遵守 CC BY-NC-ND 4.0 许可！<br />'
+         + '作者：{content:author}<br />'
+         + '链接：{pboot:pageurl}<br />'          
+         + '</div>';
+     var textData = window.getSelection().getRangeAt(0)
+         + '\n\n----------------------------------------------------------------------\n'
+         + '本文由 Savalone 原创或搜集整理发表，转载请遵守 CC BY-NC-ND 4.0 许可！\n'
+         + '作者：{content:author}\n'
+         + '链接：{pboot:pageurl}\n';
+     if(event.clipboardData){
+         event.clipboardData.setData("text/html", htmlData);          
+         event.clipboardData.setData("text/plain",textData);
+     }
+     else if(window.clipboardData){ 
+         return window.clipboardData.setData("text", textData);
+     }
+ };
+
+ document.addEventListener('copy',function(e){
+     setClipboardText(e);
+ });
+ 
+</script>
 </body>
 </html>
