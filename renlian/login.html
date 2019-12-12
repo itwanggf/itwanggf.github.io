@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登录</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<h1>请对准摄像头,10秒后将会自动登录</h1>
+<form action="/userLogin" method="post" id="form">
+    <input type="hidden" id="imageBase64" name="base64Image">
+</form>
+<video id="video" width="500px" height="500px" autoplay="autoplay"></video>
+<canvas id="canvas" width="500px" height="500px"></canvas>
+<script>
+    let mediaStreamTrack = null; // 视频对象(全局)
+    openMedia();
+    //开启摄像头
+    function openMedia() {
+        let constraints = {
+            video: {width: 500, height: 500},
+            audio: true
+        };
+        //获得video摄像头
+        let video = document.getElementById('video');
+        let promise = navigator.mediaDevices.getUserMedia(constraints);
+        promise.then((mediaStream) => {
+            mediaStreamTrack = typeof mediaStream.stop === 'function' ? mediaStream : mediaStream.getTracks()[1];
+            video.srcObject = mediaStream;
+            video.play();
+        });
+    }
+    // 拍照
+    function takePhoto() {
+        //获得Canvas对象
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, 500, 500);
+        // toDataURL  ---  可传入'image/png'---默认, 'image/jpeg'
+        let img = document.getElementById('canvas').toDataURL('image/jpeg');
+        img = img.substring(23, img.length);
+        document.getElementById('imageBase64').value = img;
+        mediaStreamTrack.stop();
+        document.getElementById("form").submit();
+    }
+    //进入页面10秒后进行拍照
+    setTimeout(function () {
+        takePhoto();
+    }, 10000)
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!--
+ * @Author: wgf
+ * @Date: 2019-12-12 18:00:59
+ * @LastEditors: wgf
+ * @LastEditTime: 2019-12-12 18:06:32
+ * @Descripttion: 
+ * @FilePath: \renlian\register.html
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>注册</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<h1>请对准摄像头,点击注册后将会进行拍照</h1>
+<form action="/addUser" method="post" id="form">
+    请输入用户名：<input type="text" name="userName">
+    <input type="hidden" id="imageBase64" name="base64Image">
+</form>
+<button onclick="openMedia()">开启摄像头</button>
+<button onclick="takePhoto()">注册</button>
+<button onclick="closeMedia()">关闭摄像头</button>
+<video id="video" width="500px" height="500px" autoplay="autoplay"></video>
+<canvas id="canvas" width="500px" height="500px"></canvas>
+<img id="img" alt="">
+<script>
+    let mediaStreamTrack = null; // 视频对象(全局)
+    function openMedia() {
+        let constraints = {
+            video: {width: 500, height: 500},
+            audio: true
+        };
+        //获得video摄像头
+        let video = document.getElementById('video');
+        let promise = navigator.mediaDevices.getUserMedia(constraints);
+        promise.then((mediaStream) => {
+            mediaStreamTrack = typeof mediaStream.stop === 'function' ? mediaStream : mediaStream.getTracks()[1];
+            video.srcObject = mediaStream;
+            video.play();
+        });
+    }
+    // 拍照
+    function takePhoto() {
+        //获得Canvas对象
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, 500, 500);
+        let img = document.getElementById('canvas').toDataURL('image/jpeg');
+        img = img.substring(23, img.length);
+        document.getElementById('imageBase64').value = img;
+        // document.getElementById("form").submit();
+        document.getElementById("img").src = img;
+    }
+    // 关闭摄像头
+    function closeMedia() {
+        mediaStreamTrack.stop();
+    }
+</script>
+</body>
+</html>
