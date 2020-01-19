@@ -1,98 +1,699 @@
+<!--
+ * @Author: wgf
+ * @Date: 2019-12-05 09:57:48
+ * @LastEditors  : wgf
+ * @LastEditTime : 2020-01-06 17:56:26
+ * @Descripttion: wangguofeng@atwasoft.net
+ -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Snake</title>
+		<style type="text/css">
+			/**全选,统配选择器*/
+			
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			/*设置整个页面的背景*/
+			body {
+				background: -webkit-linear-gradient(left, #f1c40f, #e74c3c); /*设置渐变*/
+				background: -moz-linear-gradient(left, red, orange);
+				/*不同浏览器内核不同,兼容度不同,moz(火狐firefox)*/
+			}
+			
+			h1 {
+				text-align: center;
+				margin-top: 20px;
+			}
+			
+			table {
+				margin: 30px auto;
+				/*border-collapse:collapse ;*/
+				/*单元格的位置重叠*/
+			}
+			
+			td {
+				width: 30px;
+				height: 30px;
+				border: 1px solid white;
+				text-align: center;
+				line-height: 30px;
+			}
+		</style>
+	</head>
 
-<head>
-    <meta charset="UTF-8">
-    <title>编程字典</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <script src="jquery.min.js"></script>
-    <script src="bootstrap.min.js"></script>
-    <style>
-        .newspaper {
-            -webkit-column-count: 3;
-            /* Chrome, Safari, Opera */
-            -moz-column-count: 3;
-            /* Firefox */
-            column-count: 3;
-        }
-    </style>
-</head>
+	<body>
+		<!-- <h1>Running Snake</h1> -->
+		<table id="table">
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+	</body>
+    <script type="text/javascript">
+		// 1.基本设置
 
-<body>
-    <div class="container-fluid">
-        <h1>我的第一个 Bootstrap 页面</h1>
-        <p>使用了 .container-fluid，100% 宽度，占据全部视口（viewport）的容器。</p>
-        <div class="container">
-            <h1>我的第一个 Bootstrap 页面</h1>
-            <p>这是一些文本。</p>
-            <div class="row">
-                <div class="col">1</div>
-                <div class="col">2</div>
-                <div class="col">3</div>
-            </div>
-            <p class="text-muted">柔和的文本。</p>
-            <p class="text-primary">重要的文本。</p>
-            <p class="text-success">执行成功的文本。</p>
-            <p class="text-info">代表一些提示信息的文本。</p>
-            <p class="text-warning">警告文本。</p>
-            <p class="text-danger">危险操作文本。</p>
-            <p class="text-secondary">副标题。</p>
-            <p class="text-dark">深灰色文字。</p>
-            <p class="text-light">浅灰色文本（白色背景上看不清楚）。</p>
-            <p class="text-white">白色文本（白色背景上看不清楚）。</p>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>john@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Mary</td>
-                        <td>Moe</td>
-                        <td>mary@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>July</td>
-                        <td>Dooley</td>
-                        <td>july@example.com</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="alert alert-success">
-                <strong>成功!</strong> 指定操作成功提示信息。
-            </div>
-            <button type="button" class="btn">基本按钮</button>
-            <button type="button" class="btn btn-primary">主要按钮</button>
-            <button type="button" class="btn btn-secondary">次要按钮</button>
-            <button type="button" class="btn btn-success">成功</button>
-            <button type="button" class="btn btn-info">信息</button>
-            <button type="button" class="btn btn-warning">警告</button>
-            <button type="button" class="btn btn-danger">危险</button>
-            <button type="button" class="btn btn-dark">黑色</button>
-            <button type="button" class="btn btn-light">浅色</button>
-            <button type="button" class="btn btn-link">链接</button>
-            <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 40%"></div>
-            </div>
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </div>
-    </div>
+		var score = 0; //定义分数变量，保存游戏的成绩
+		var direction = "right" //设置蛇身移动的方向，默认向右移动
+		var snake_data = [{
+			"row": 6,
+			"col": 8
+		}, {
+			"row": 6,
+			"col": 7
+		}, {
+			"row": 6,
+			"col": 6
+		}, {
+			"row": 6,
+			"col": 5
+		}, {
+			"row": 6,
+			"col": 4
+		}, {
+			"row": 6,
+			"col": 3
+		}]; //定义蛇身的基本数据(键，值类型)
+		// row(行)，columns(列) 蛇身起始位置
 
-</body>
+		// 声明绘制蛇身的函数(并封装函数)
+		function snake(row, col, color) {
+			//			document.getElementsByTagName("tr")[row].getElementsByTagName("td")[col].style.background = color;
+			var tr = document.getElementsByTagName("tr")[row];
+			var td = tr.getElementsByTagName("td")[col];
+			td.style.background = color;
+		}
+
+		//声明绘制整条蛇的函数
+		function draw_snake() {
+			for(var i = 0; i < snake_data.length; i++) {
+				if (i != 0) {
+					var result = snake_data[0].row == snake_data[i].row && snake_data[0].col == snake_data[i].col;
+					// 如果蛇头的行号和当前行号相等(重合) 并且 蛇头的列号和蛇身的列号相等(说明重合)
+					if (result) {
+						die();
+						return;
+					}
+				}
+				var row = snake_data[i].row;
+				var col = snake_data[i].col;
+				var color = "rgba(0,0,0,1)";
+				snake(row, col, color);
+			}
+		}
+		//调用函数
+		draw_snake();
+
+		//声明绘制 蛋 的函数
+		function draw_egg() {
+			//do while 循环 --> 先执行一次，再循环
+			do {
+				var row = parseInt(Math.random() * 20); //random(0-1)
+				var col = parseInt(Math.random() * 20);
+				var flag = false; //随机出来的egg不能和蛇身重合
+				for(var i = 0; i < snake_data.length; i++) {
+					var snake_row = snake_data[i].row;
+					var snake_col = snake_data[i].col;
+					if(row == snake_row && col == snake_col) {
+						flag = true;
+					}
+				}
+
+			} while (flag) {
+				//				document.getElementsByTagName("tr")[row].getElementsByTagName("td")[col].style.background="white";
+				var tr = document.getElementsByTagName("tr")[row];
+				var td = tr.getElementsByTagName("td")[col];
+				td.style.background = "white";
+			}
+		}
+		// 调用
+		draw_egg();
+
+		// 定义清屏函数 
+		function clear() {
+			for(var i = 0; i < 20; i++) {
+				for(var j = 0; j < 20; j++) {
+					var td = document.getElementsByTagName("tr")[i].getElementsByTagName("td")[j];
+					if (td.style.background != "white") {
+						td.style.background = "";
+					}
+				}
+			}
+		}
+
+		// 定义死亡函数(碰壁，撞到自身)
+		function die() {
+			clearInterval(timer); // 停止定时器
+			var result = confirm(`游戏结束,最终得分为:${score}！！！`);
+			if (result) {
+				window.location.reload();
+			}
+		}
+
+		// 定义定时器，让蛇自动移动(主要业务逻辑)
+		var timer = setInterval(function() {
+			clear(); // 每移动一次都要清除上一次绘制的蛇
+			switch(direction) {
+				case "left":
+					if(snake_data[0].col - 1 < 0) {
+						die();
+						return;
+					}
+					// unshift 给第一个元素后面加入一个元素
+					snake_data.unshift({
+						"row": snake_data[0].row,
+						"col": snake_data[0].col - 1
+					})
+					
+				break;
+
+				case "right":
+					if(snake_data[0].col + 1 > 20) {
+						die();
+						return;
+					}
+					snake_data.unshift({
+						"row": snake_data[0].row,
+						"col": snake_data[0].col +1 
+					})
+				break;
+
+				case "up":
+					if(snake_data[0].row - 1 < 0) {
+						die();
+						return;
+					}
+					snake_data.unshift({
+						"row": snake_data[0].row -1,
+						"col": snake_data[0].col
+					})
+				break;
+
+				case "down":
+					if(snake_data[0].row + 1 > 20) {
+						die();
+						return;
+					}
+					snake_data.unshift({
+						"row": snake_data[0].row + 1,
+						"col": snake_data[0].col
+					})
+				break;
+			}
+			
+			//判断新添加的蛇头是否是egg
+			var row = snake_data[0].row;
+			var col = snake_data[0].col;
+			var td = document.getElementsByTagName("tr")[row].getElementsByTagName("td")[col];
+			if (td.style.background != "white") {
+				snake_data.pop();
+			}else{
+				draw_egg();
+				score += 10; //得分+10分
+			}
+		draw_snake();
+			
+		}, 200); // 匿名函数，刷新时间(毫秒)
+
+		// 监听键盘事件，完成贪吃蛇方向的改变
+		// onkeydown 按下操作
+		// 键盘类型属于unicode编码,每个数字对应键盘编码 ，左上右下
+		document.onkeydown = function (event){
+			console.log(event.keyCode); //在控制台输出
+			switch (event.keyCode) {
+				case 37:
+				if (direction == "right") {
+					return;
+				}
+				direction = "left";	
+					break;
+
+				case 38:
+				if (direction == "down") {
+					return;
+				}
+				direction = "up";	
+					break;
+
+				
+				case 39:
+				if (direction == "left") {
+					return;
+				}
+				direction = "right";	
+					break;	
+				
+				case 40:
+				if (direction == "up") {
+					return;
+				}
+				direction = "down";	
+					break;	
+				
+				default:
+					break;
+			}
+		}
+	</script>
 
 </html>

@@ -2,7 +2,7 @@
  * @Author: wgf
  * @Date: 2019-12-12 17:59:27
  * @LastEditors: wgf
- * @LastEditTime: 2019-12-12 19:05:43
+ * @LastEditTime: 2019-12-12 19:26:17
  * @Descripttion: 
  * @FilePath: \renlian\index.html
  -->
@@ -47,5 +47,56 @@
  });
  
 </script>
+<script>
+  //js 页面加载后刷新一次，仅一次
+        String.prototype.queryString = function(name) {
+        var reg = new RegExp("[?&]" + name + "=([^&]+)", "i"),
+            r = this.match(reg);
+            return r !== null ? unescape(r[1]) : null
+        };
+        window.onload = function() {
+            var last = location.href.queryString("_v");
+            if (location.href.indexOf("?") == -1) {
+                location.href = location.href + "?_v=" + (new Date().getTime())
+            } else {
+                var now = new Date().getTime();
+                if (!last) {
+                    location.href = location.href + "&_v=" + (new Date().getTime())
+                } else if (parseInt(last) < (now - 500)) {
+                    location.href = location.href.replace("_v=" + last, "_v=" + (new Date().getTime()))
+                }
+            }
+        };
+          
+        </script>
+        <script>
+                document.oncontextmenu=new Function("event.returnValue=false"); //禁止右键功能
+                document.onselectstart=new Function("event.returnValue=false"); //禁止选择文字
+            </script>
+            <script>
+            console.log([
+
+"                   _ooOoo_",
+"                  o8888888o",
+"                  88\" . \"88",
+"                  (| -_- |)",
+"                  O\\  =  /O",
+"               ____/`---'\\____",
+"             .'  \\\\|     |//  `.",
+"            /  \\\\|||  :  |||//  \\",
+"           /  _||||| -:- |||||-  \\",
+"           |   | \\\\\\  -  /// |   |",
+"           | \\_|  ''\\---/''  |   |",
+"           \\  .-\\__  `-`  ___/-. /",
+"         ___`. .'  /--.--\\  `. . __",
+"      .\"\" '<  `.___\\_<|>_/___.'  >'\"\".",
+"     | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |",
+"     \\  \\ `-.   \\_ __\\ /__ _/   .-` /  /",
+"======`-.____`-.___\\_____/___.-`____.-'======",
+"                   `=---='",
+"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+"         佛祖保佑       永无BUG"
+].join('\n'));
+            </script>
 </body>
 </html>

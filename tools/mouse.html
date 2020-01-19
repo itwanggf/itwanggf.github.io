@@ -1,37 +1,63 @@
-<!DOCTYPE HTML>  
-<html lang="zh-cn">  
-<head>  
-<meta charset="utf-8" />  
-<title>Javascript</title>  
-<style>  
-body{margin:0;padding:0;background:#ccc;font-size:12px;overflow:auto}  
-.main{width: 500px;height: 330px;position: relative;margin: 250px auto 0;background-color: #eee;}  
-.box{position: absolute;width: 220px;height: 180px;background-color: orange;top: 80px;left: 80px;}  
-</style>  
-</head>  
-  
-<body style="height:1600px;">  
-<div class="main">  
-    <div class="box" id="box"></div>  
-</div>  
-  
-<script>  
-var oBox = document.getElementById('box');  
-  
-window.onload = function(){  
-      
-    oBox.onmousedown = function(ev){  
-        ev = ev || window.event;  
-          
-        console.log(ev.offsetX, ev.offsetY);  
-        console.log(ev.clientX, ev.clientY);  
-        console.log(ev.pageX, ev.pageY);  
-        console.log(ev.screenX, ev.screenY);  
-        console.log(ev.layerX, ev.layerY);  
-        console.log(ev.x, ev.y);  
-    }  
-}  
-  
-</script>  
-</body>  
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>-webkit-scrollbar</title>
+</head>
+<style>
+    #progress{
+        width: 0;
+        height: 10px;
+        background-color: blueviolet;
+    }
+</style>
+<body>
+<form action="">
+	<label for="">
+		姓名: <input type="text" name="name">
+	</label>
+	<label for="">
+		文件：<input id="file" type="file" name="file">
+	</label>
+	<label for="">
+		<input type="button" value="保存">
+	</label>
+</form>
+<div id="progress"></div>
+</body>
+
+<script>
+var btn = document.querySelector('[type=button]');
+btn.onclick = function () {
+    // 文件元素
+    var file = document.querySelector('[type=file]');
+    // 通过FormData将文件转成二进制数据
+    var formData = new FormData();
+    // 将文件转二进制
+    formData.append('upload', file.files[0]);
+    console.log(formData)
+    var xhr = new XMLHttpRequest;
+    xhr.open('post', 'file.php');
+    // 监听上传进度
+    xhr.upload.onprogress = function (ev) {
+    // 事件对象
+    // console.log(ev);
+        var percent = (ev.loaded / ev.total) * 100 + '%';
+        console.log(percent);
+        var a = document.getElementById("progress")
+        a.style.width = percent;
+        a.innerHTML = percent;
+    }
+ 
+    xhr.send(formData);
+    xhr.onreadystatechange = function () {
+            if(xhr.readyState == 4 && xhr.status == 200) {
+                    //
+            }
+    }
+}
+</script>
 </html>

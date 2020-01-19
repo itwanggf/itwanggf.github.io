@@ -7,7 +7,6 @@
 </head>
 <script>
     var webSocket;
-
     function connect() {
         try {
             var readyState = new Array("正在连接", "已建立连接", "正在关闭连接", "已关闭连接");
@@ -25,6 +24,7 @@
                 message.innerHTML += "<p>Socket状态：" + readyState[webSocket.readyState] + "</p>";
             }
         } catch (exception) {
+            console.log("有错误发生", exception)
             message.innerHTML += "<p>有错误发生</p>";
         }
     }
@@ -55,6 +55,7 @@
             webSocket.send(JSON.stringify(dataList));
             message.innerHTML += "<p>发送数据：" + JSON.stringify(dataList) + "</p>";
         } catch (exception) {
+            console.log("有错误发生", exception)
             message.innerHTML += "<p>发送数据出错</p>";
         }
     }
@@ -63,7 +64,9 @@
         webSocket.close();
     }
 </script>
+<style>
 
+</style>
 <body>
     <h1>WebSocket客户端示例</h1>
     <div id="message"></div>
@@ -74,7 +77,7 @@
     <progress id="Progress" value="0" max="100"></progress>
     <input type="button" value="下载" onclick="download()">
     <div id="view"></div>
-
+    
     <script>
         var fileList = []
         var div = document.getElementById("view")
@@ -102,6 +105,12 @@
                         img.style.width = '10%'
                         img.src = handleLookType(files[i].type) === 'pic' ? window.URL.createObjectURL(files[i]) :
                             'img/1.png'
+                        // var blobs = "file:///C:/Users/%E5%8D%8E%E4%B8%BA/Desktop/%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83.docx"  //打开本地文件必须加上file://
+                        // 字符内容转变成blob地址
+                        var blob = getObjectURL(files[i])
+                        img.onclick = function () {
+                            window.open(blob)
+                        }
                         div.appendChild(img);
                     }
                     var span = document.createElement("span")
@@ -131,6 +140,17 @@
                 return 'file'
             }
         }
+        // 然后通过a标签的download进行下载
+        var dispatchDownload = (fileName, href) => {
+            var a = document.createElement('a');
+            a.addEventListener('click', () => {
+                a.download = fileName;
+                a.href = href;
+            });
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', false, false);
+            a.dispatchEvent(e);
+        }
 
         function funcDownload(content, filename) {
             // 创建隐藏的可下载链接
@@ -145,6 +165,19 @@
             eleLink.click();
             // 然后移除
             document.body.removeChild(eleLink);
+        }
+        //建立一个可存取到该file的url,  createObjectURL兼容处理
+        function getObjectURL(file) {
+            var url = null ;
+            if (window.createObjectURL!=undefined) { // basic
+                url = window.createObjectURL(file) ;
+            } else if (window.URL!=undefined) { // mozilla(firefox)
+                url = window.URL.createObjectURL(file) ;
+            } else if (window.webkitURL!=undefined) { // webkit or chrome
+                url = window.webkitURL.createObjectURL(file) ;
+            }
+            console.log(url)
+            return url ;  //输出格式 blob:http://localhost:8082/dd56dfec-12ef-4532-ae88-f1a2e6802f2c
         }
     </script>
 </body>

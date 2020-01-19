@@ -1,0 +1,110 @@
+<html>
+<head>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta charset="utf-8"/>
+    <meta name="applicable-device" content="pc,mobile">
+    <meta http-equiv="X-UA-Compatible" content="edge"/>
+    <title>doc转pdf - 爱资料工具</title>
+    <meta name="Keywords" content="doc转pdf,文档转换"/>
+    <meta name="Description" content="doc文档转换成pdf文档，方便我们传输预览文件。只需要选择一个doc或docx文件，简单易用！"/>
+
+    <script type="text/javascript" src="./tools/jquery.min.js"></script>
+
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-6733883877029153",
+        enable_page_level_ads: true
+    });
+</script>
+    <style>
+        .table td, .table th {
+            border: 1px solid #e2e2e2 !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>doc转pdf</h1>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="home">
+            <div class="col-lg-12 col-xs-12 form-horizontal top10">
+                <label class="col-lg-1 col-xs-6 control-label">上传文件</label>
+                <div class="col-lg-3 col-xs-6">
+                    <input type="file" name="" id="file" class="form-control">
+                </div>
+                <div class="col-lg-2 col-xs-6">
+                    <input type="button" value="doc/xls转pdf" id="create_btn" class="btn btn-success" onclick="create(this)">
+                </div>
+                <label class="control-label" style="color: green;font-size: 18px;font-weight: 600;" id="show"></label>
+            </div>
+            <div class="col-lg-12 col-xs-12 form-horizontal top10">
+                <h2>转换结果</h2>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>文件名</th>
+                        <th>格式</th>
+                        <th>结果</th>
+                    </tr>
+                    </thead>
+                    <tbody id="result"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    function create(e) {
+        var file = $('#file').val(), text = $(e).val();
+        if (file == '') {
+            alert('转换文件不能为空!');
+            return;
+        }
+        var data = new FormData();
+        data.append('file', $('#file')[0].files[0]);
+        data.append('suffix', 'doc');
+        data.append('suffix', 'xls');
+        $(e).val('处理中...');
+        $.ajax({
+            type: "post",
+            url: "https://api.toolnb.com/Tools/Api/officetopdf.html",
+            data: data,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (result.code == 1) {
+                    var file = result.data['file'], yname = result.data['yname'], filename = result.data['filename'], suffix = result.data['suffix'], ysuffix = result.data['ysuffix'];
+                    $('#result').append("<tr><td>" + yname + "</td><td> " + ysuffix + ">>" + suffix + "</td><td><a href='" + file + "' target='_blank' download='" + filename + "'>" + filename + "</a></td></tr>");
+                    console.log(file, name);
+                    $('#show').html("处理完成");
+                    console.log(result, '--------------')
+                    window.open(file)
+                } else {
+                    alert(result.msg);
+                    $('#show').html("处理失败:" + result.msg);
+                }
+                $(e).val(text);
+            }, error: function (result) {
+                alert('处理失败');
+                $(e).val(text);
+            }, xhr: function () {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) { // check if upload property exists
+                    myXhr.upload.addEventListener('progress', function (e) {
+                        var loaded = e.loaded;                  //已经上传大小情况
+                        var total = e.total;                      //附件总大小
+                        var percent = Math.floor(100 * loaded / total) + "%";     //已经上传的百分比
+                        // console.log("show：" + percent);
+                        $('#show').html(percent);
+                        // $("#processBar").css("width",percent);
+                    }, false);
+                }
+                return myXhr;
+            }
+        });
+    }
+</script>
+</html>
