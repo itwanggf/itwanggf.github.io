@@ -1,63 +1,45 @@
+<!--
+ * @Author: wgf
+ * @Date: 2019-12-05 09:57:48
+ * @LastEditors  : wgf
+ * @LastEditTime : 2020-01-20 15:32:40
+ * @Descripttion: wangguofeng@atwasoft.net
+ -->
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>-webkit-scrollbar</title>
-</head>
-<style>
-    #progress{
-        width: 0;
-        height: 10px;
-        background-color: blueviolet;
-    }
-</style>
-<body>
-<form action="">
-	<label for="">
-		姓名: <input type="text" name="name">
-	</label>
-	<label for="">
-		文件：<input id="file" type="file" name="file">
-	</label>
-	<label for="">
-		<input type="button" value="保存">
-	</label>
-</form>
-<div id="progress"></div>
-</body>
-
-<script>
-var btn = document.querySelector('[type=button]');
-btn.onclick = function () {
-    // 文件元素
-    var file = document.querySelector('[type=file]');
-    // 通过FormData将文件转成二进制数据
-    var formData = new FormData();
-    // 将文件转二进制
-    formData.append('upload', file.files[0]);
-    console.log(formData)
-    var xhr = new XMLHttpRequest;
-    xhr.open('post', 'file.php');
-    // 监听上传进度
-    xhr.upload.onprogress = function (ev) {
-    // 事件对象
-    // console.log(ev);
-        var percent = (ev.loaded / ev.total) * 100 + '%';
-        console.log(percent);
-        var a = document.getElementById("progress")
-        a.style.width = percent;
-        a.innerHTML = percent;
-    }
- 
-    xhr.send(formData);
-    xhr.onreadystatechange = function () {
-            if(xhr.readyState == 4 && xhr.status == 200) {
-                    //
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>Intro to SceneView - Create a 3D map</title>
+        <style>
+            html, body, #viewDiv {
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                width: 100%;
             }
-    }
-}
-</script>
+        </style>
+        <link rel="stylesheet" href="https://js.arcgis.com/4.9/esri/css/main.css">
+        <script src="https://js.arcgis.com/4.9/"></script>
+        <script>
+            require([
+                "esri/Map",
+                "esri/views/SceneView"
+            ], function(Map, SceneView){
+                var map = new Map({
+                    basemap: "osm",
+                    ground: "world-elevation"
+                });
+                var view = new SceneView({
+                    container: "viewDiv",
+                    map: map, // 绑定地图
+                    scale: 30000000, // 设定比例尺 1:30,000,000
+                    center: [104.071469,30.662036] // 视角中心
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="viewDiv"></div>
+    </body>
 </html>

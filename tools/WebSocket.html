@@ -179,6 +179,13 @@
             console.log(url)
             return url ;  //输出格式 blob:http://localhost:8082/dd56dfec-12ef-4532-ae88-f1a2e6802f2c
         }
+        const getImages = (el, includeDuplicates = false) => {
+            const images = [...el.getElementsByTagName('img')].map(img => img.getAttribute('src'));
+            return includeDuplicates ? images : [...new Set(images)];
+        };
+
+        // 事例：includeDuplicates 为 false 表示需要排除重复元素
+        getImages(document, false);
     </script>
 </body>
 
