@@ -15,23 +15,202 @@
   <meta name="Description" content="">
   <title>Document</title>
   <style>
-	body{
-		margin:0;
-		padding:0;
-	}
+	#document {
+        /* height: 100vh; */
+        display: flex;
+        flex-direction: column;
+        background: #202020;
+        font-family: microsoft yahei,wenquanyi micro hei,sans-serif !important;
+    }
+
+    nav, footer {
+        background: #494949;
+        display: flex;
+        justify-content: center;
+    }
+
+    main {
+        color: #bdbdbd;
+        flex: auto;
+    }
+
+    footer {
+        flex-shrink: 0;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    h1,
+    p {
+        padding: 15px;
+    }
+
+    nav > h1 {
+        color: #82FCFD;
+        text-shadow: 1px 1px 4px #00000080;
+    }
+
+    footer > h1 {
+        color: #82FCFD;
+        text-shadow: 1px 1px 4px #00000080;
+    }
+    /* 列表 */
+    ul {
+    list-style: none;
+    color: #fff;
+    font-size: 20px;
+    border: 3px solid #000;
+    padding: 1rem 2rem;
+    min-height: 200px;
+    margin: 15px 2rem 0 0;
+    background: #323232;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    }
+
+    li {
+    padding: 0.3rem 0;
+    }
+
+    li::before {
+    content: "🗹 ";
+    color: aqua;
+    }
+
+    li.completed::before {
+    content: "✔ ";
+    text-decoration: none;
+    color: greenyellow;
+    }
+
+    li.completed {
+    text-decoration: line-through;
+    color: #bdbdbd;
+    }
+    /* 导航 */
+    .breadcrumb {
+    font-size: 1.6rem;
+    color: #fff;
+    }
+    .breadcrumb a:first-child {
+    color: #82fcfd;
+    }
+    .breadcrumb a:first-child::before {
+    content: " » ";
+    }
+    .breadcrumb a::after {
+    content: " /";
+    color: #ef6eae;
+    }
+    .breadcrumb a:last-child::after {
+        content: "";
+    }
+    /* 瀑布流 */
+    .columns {
+        column-width: 320px;
+        column-gap: 15px;
+        width: 90%;
+        max-width: 1100px;
+        margin: 50px auto;
+    }
+    .columns div {
+        display: inline-block;
+        /* box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4); */
+        column-break-inside: avoid;
+        border-radius: 8px;
+    }
+    .columns div img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+        border-radius: 8px;
+    }
+
   </style>
  </head>
  <body>
-     <div>
-         假定有一张psd设计稿， 宽度为1920px， 高度为1080px， 设计稿中有一个按钮， 宽为100px， 高位40px， 如何把这个按钮的宽高从px转换为vw和vh。
-我们可以使用以下公式 
-        宽度(vw) =  100 / 1920 * 100;
-        高度(vh) = 100 / 1080 * 40;</div>
+ <div id="document">
+	<nav>
+		<h1>头部内容</h1>
+	</nav>
+	<main>
+        <div class="breadcrumb">
+            <a>三钻</a>
+            <a>前端</a>
+            <a>教程</a>
+        </div>
+
+		<div>
+            假定有一张psd设计稿， 宽度为1920px， 高度为1080px， 设计稿中有一个按钮， 宽为100px， 高位40px， 如何把这个按钮的宽高从px转换为vw和vh。
+    我们可以使用以下公式 
+            宽度(vw) =  100 / 1920 * 100;
+            高度(vh) = 100 / 1080 * 40;
+        </div>
         <label>宽度</label><input type="text" id="width" value="">
         <label>高度</label><input type="text" id="height" value="">
         <button onclick="result()">计算</button>
         <button onclick="clears()">重置</button>
         <button onclick="copy()">复制</button>
+        <button onclick="darkmode.toggle();console.log(darkmode.isActivated())">黑暗模式</button>
+        <div>
+        <h2>待处理</h2>
+        <ul>
+            <li>待办任务1</li>
+            <li>待办任务2</li>
+            <li>待办任务3</li>
+            <li>待办任务4</li>
+            <li>待办任务5</li>
+        </ul>
+        </div>
+        <div>
+        <h2>已完成</h2>
+        <ul>
+            <li class="completed">完成任务1</li>
+            <li class="completed">完成任务2</li>
+            <li class="completed">完成任务3</li>
+        </ul>
+        </div>
+        <div class="columns">
+            <div>
+                <img src="https://source.unsplash.com/random?city" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?night" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?developer" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?building" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?water" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?coding" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?stars" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?forest" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?girls" alt="" />
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/random?working" alt="" />
+            </div>
+        </div>
+
+	</main>
+	<footer>
+		<h1>底部内容</h1>
+	</footer>
+</div>
  </body>
 </html>
 <script type="text/javascript">
@@ -52,4 +231,23 @@
         width.select();
         document.execCommand("Copy");
     }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
+<script>
+  // 这些是这个插件的可配置项：
+  var options = {
+    bottom: "32px", // 定位底部距离 - 默认: '32px'
+    right: "32px", // 定位右边距离 - 默认: '32px'
+    left: "unset", // 定位左边距离 - 默认: 'unset'
+    time: "0.5s", // 默认动画时间: '0.3s'
+    mixColor: "#fff", // 需要改变的颜色 - 默认: '#fff'
+    backgroundColor: "#fff", // 背景颜色 - 默认: '#fff'
+    buttonColorDark: "#262728", // 黑暗模式下按钮颜色 - 默认: '#100f2c'
+    buttonColorLight: "#fff", // 日间模式下按钮颜色 - 默认: '#fff'
+    saveInCookies: true, // 是否在cookie保存当前模式 - 默认: true,
+    label: "🌓", // 切换模式按钮图标 - 默认: ''
+    autoMatchOsTheme: true // 是否自动根据系统适应模式 - 默认: true
+  };
+  var darkmode =  new Darkmode();
+
 </script>
