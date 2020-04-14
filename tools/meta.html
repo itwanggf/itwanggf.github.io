@@ -1,212 +1,236 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8" />
-  <title>电子名片生成器</title>
+  <script>
+    window.onload = () => {
+      initParameter()
+      initCanvas()
+    }
+
+    function initParameter() {
+      const {
+        screen: {
+          width
+        },
+        devicePixelRatio
+      } = window
+      this.windowWidth = width
+      this.dpr = Math.round(devicePixelRatio)
+    }
+
+    async function initCanvas() {
+      const canvas = document.getElementById('canvas')
+      const ctx = canvas.getContext('2d')
+
+      this.canvas = canvas
+      this.ctx = ctx
+
+      await getBackgroundImage()
+      await getQRCodeImage()
+      await getAvatarImage()
+
+      this.fillBackgroundImage()
+      this.fillQrCodeImage()
+      this.fillUsernameText()
+      this.fillHelpText()
+      this.fillUserInfo()
+
+    }
+
+    function getBackgroundImage() {
+      return new Promise(async (resolve) => {
+        const backgroundImage = new Image()
+        backgroundImage.src = await getURLBase64('http://cdn.algbb.cn/test/wechatbg.jpg')
+        // backgroundImage.src = 'http://cdn.algbb.cn/test/wechatbg.jpg'
+        backgroundImage.crossOrigin = '*'
+        backgroundImage.onload = () => {
+          this.backgroundImage = backgroundImage
+          resolve()
+        }
+      })
+    }
+
+    function getQRCodeImage() {
+      return new Promise(async (resolve) => {
+        const qrCodeImage = new Image()
+        qrCodeImage.src = await getURLBase64('http://cdn.algbb.cn/test/qrcode.jpg')
+        // qrCodeImage.src = 'http://cdn.algbb.cn/test/qrcode.jpg'
+        qrCodeImage.crossOrigin = '*'
+        qrCodeImage.onload = () => {
+          this.qrCodeImage = qrCodeImage
+          resolve()
+        }
+      })
+    }
+
+    function getAvatarImage() {
+      return new Promise(async (resolve) => {
+        const avatarImage = new Image()
+        avatarImage.src = await getURLBase64('http://cdn.algbb.cn/test/avatar.jpg')
+        // avatarImage.src = 'http://cdn.algbb.cn/test/avatar.jpg'
+        avatarImage.crossOrigin = '*'
+        avatarImage.onload = () => {
+          this.avatarImage = avatarImage
+          resolve()
+        }
+      })
+    }
+
+    function fillBackgroundImage() {
+      const {
+        width,
+        height
+      } = this.backgroundImage
+
+      // canvas宽度为手机宽度 - 40px
+      const newCanvasWidth = this.windowWidth - 40
+      const scale = width / newCanvasWidth
+      const newCanvasHeight = height / scale
+
+      this.canvas.width = newCanvasWidth * this.dpr
+      this.canvas.height = newCanvasHeight * this.dpr
+      this.canvas.style.width = (newCanvasWidth * this.dpr) + 'px'
+      this.canvas.style.height = (newCanvasHeight * this.dpr) + 'px'
+      this.ctx.scale(this.dpr, this.dpr)
+
+      this.ctx.clearRect(0, 0, newCanvasWidth, newCanvasHeight)
+      this.ctx.drawImage(this.backgroundImage, 0, 0, newCanvasWidth, newCanvasHeight)
+
+      this.canvasWidth = newCanvasWidth
+      this.canvasHeight = newCanvasHeight
+    }
+
+    function fillQrCodeImage() {
+      const {
+        width,
+        height
+      } = this.qrCodeImage
+      const {
+        canvasWidth,
+        canvasHeight
+      } = this
+
+      // 设置二维码尺寸，默认正方形
+      const qrCodeImageWidth = canvasWidth - 140
+      const scale = width / qrCodeImageWidth
+      const qrCodeImageHeight = height / scale
+
+      // 设置渲染坐标
+      const renderPointX = canvasWidth / 2 - qrCodeImageWidth / 2
+      const renderPointY = canvasHeight / 2 - qrCodeImageHeight / 2 - 30
+
+      this.qrCodePointX = renderPointX
+      this.qrCodePointY = renderPointY
+      this.qrCodeImageWidth = qrCodeImageWidth
+      this.qrCodeImageHeight = qrCodeImageHeight
+
+      this.ctx.drawImage(this.qrCodeImage, renderPointX, renderPointY, qrCodeImageWidth, qrCodeImageHeight)
+    }
+
+    function fillUsernameText() {
+      const {
+        canvasWidth
+      } = this
+
+      this.ctx.font = 'normal 20px 微软雅黑'
+      this.ctx.fillStyle = '#666'
+      this.ctx.textAlign = 'center'
+      this.ctx.textBaseline = 'middle'
+
+      this.ctx.fillText('zhcxk1998', canvasWidth / 2, this.qrCodePointY - 20)
+    }
+
+    function fillHelpText() {
+      const {
+        canvasWidth
+      } = this
+
+      this.ctx.font = 'normal 16px 微软雅黑'
+      this.ctx.fillStyle = '#999'
+      this.ctx.textAlign = 'center'
+      this.ctx.textBaseline = 'middle'
+      this.ctx.fillText('微信扫描上方二维码，添加好友', canvasWidth / 2, this.qrCodePointY + this.qrCodeImageHeight + 80)
+    }
+
+    function fillUserInfo() {
+      const userName = 'BB小天使'
+      const {
+        canvasWidth
+      } = this
+      const {
+        width,
+        height
+      } = this.avatarImage
+      const {
+        width: textWidth
+      } = this.ctx.measureText(userName)
+
+      // 设置头像大小，默认头像为正方形，30 * 30
+      const avatarWidth = 30
+      const scale = width / avatarWidth
+      const avatarHeight = height / scale
+
+      // 设置用户名与头像的间隔
+      const cap = 10
+      // 计算出头像与名字组合的宽度
+      const composeWidth = avatarWidth + textWidth + cap
+
+      // 配置渲染的横纵坐标
+      const renderPointX = canvasWidth / 2 - composeWidth / 2
+      const renderPointY = this.qrCodePointY + this.qrCodeImageHeight + 100
+
+      // 设置回左对齐，不然与头像与名字排列会乱
+      this.ctx.textAlign = 'left'
+
+      // 渲染
+      this.ctx.fillText(userName, renderPointX + avatarWidth + cap, renderPointY + avatarHeight / 2)
+      this.ctx.drawImage(this.avatarImage, renderPointX, renderPointY, avatarWidth, avatarHeight)
+    }
+
+    function saveImage() {
+      const {
+        canvasWidth,
+        canvasHeight
+      } = this
+
+      console.log(this.canvas.toDataURL())
+    }
+
+    function getURLBase64(url) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('get', url, true)
+        xhr.responseType = 'blob'
+        xhr.onload = function () {
+          if (this.status === 200) {
+            const blob = this.response
+            const fileReader = new FileReader()
+            fileReader.onloadend = function (e) {
+              const {
+                target
+              } = e
+              const result = target.result
+              resolve(result)
+            }
+            fileReader.readAsDataURL(blob)
+          }
+        }
+        xhr.onerror = function () {
+          reject()
+        }
+        xhr.send()
+      })
+    }
+  </script>
   <style>
-  * {
-  margin: 0;
-  padding: 0;
-}
-html, body {
-  height: 100%;
-}
-.left-div {
-  width: 30%;
-  height: 100%;
-  float: left;
-  background: #a4a296;
-}
-.line {
-  text-align: center;
-  margin-top: 30px;
-}
-.line:first-child {
-  margin-top: 200px;
-}
-.line span {
-  color: white;
-}
-.line input {
-  width: 300px;
-  height: 30px;
-  border-radius: 15px;
-  padding-left: 15px;
-  outline: none;
-  border: none;
-}
-.line button {
-  width: 100px;
-  height: 30px;
-  outline: none;
-  border: none;
-  background: #222;
-  color: #DDD;
-  cursor: pointer;
-  position: relative;
-  border-radius: 15px;
-}
-.line button:hover {
-  background: #000;
-  color: #FFF;
-}
-.line button:active {
-  left: 1px;
-  top: 1px;
-}
-.right-div {
-  width: 70%;
-  height: 100%;
-  float: left;
-  background: #eee9d3;
-  text-align: center;
-  position: relative;
-}
-.right-div canvas {
-  position: absolute;
-  top: 200px;
-  left: 50%;
-  margin-left: -300px;
-}
-#cardCanvas {
-  display: none;
-}
   </style>
 </head>
+
 <body>
-  <div class="left-div">
-    <div class="line">
-      <input id="name" type="text" placeholder="姓名"/>
-    </div>
-    <div class="line">
-      <input id="address" type="text" placeholder="地址"/>
-    </div>
-    <div class="line">
-      <input id="job" type="text" placeholder="职业"/>
-    </div>
-    <div class="line">
-      <input id="slogan" type="text" placeholder="口号" />
-    </div>
-    <div class="line">
-      <button id="generateBtn">生成名片</button>
-    </div>
+  <div class="container">
+    <canvas id="canvas" onclick="saveImage()"></canvas>
   </div>
-  <div class="right-div">
-    <canvas id="cardCanvas">
-      您的浏览器不支持Canvas，请升级浏览器
-    </canvas>
-    <canvas id="animCanvas">
-      您的浏览器不支持Canvas，请升级浏览器
-    </canvas>
-  </div>
-  <script>
-      // 创建和设置cardCanvas，该canvas作为离屏canvas
-var cardCanvas = document.getElementById('cardCanvas');
-var cardCtx = cardCanvas.getContext('2d');
-cardCtx.canvas.width = 600;
-cardCtx.canvas.height = 100;
-
-// 加载图片
-var img = new Image();
-img.src = "images/logo.png";
-img.onload = function() {
-  cardCtx.drawImage(img, 10, 10);
-}
-
-var generateBtn = document.getElementById("generateBtn");
-generateBtn.onclick = function() {
-  cardCtx.clearRect(0, 0, cardCtx.canvas.width, cardCtx.canvas.height);
-  // 背景的线性渐变
-  var linearGradient = cardCtx.createLinearGradient(0, 0, cardCtx.canvas.width, cardCtx.canvas.height);
-  linearGradient.addColorStop(0.5, 'rgb(0,0,0)');
-  linearGradient.addColorStop(1, 'rgb(133,133,133)');
-  cardCtx.fillStyle = linearGradient;
-  cardCtx.fillRect(0, 0, cardCtx.canvas.width, cardCtx.canvas.height);
-  // logo图像
-  cardCtx.drawImage(img, 10, 10);
-  // 获取姓名、地址、职业，绘制，并计算长度
-  var name = document.getElementById("name").value || "请输入姓名";
-  var address = document.getElementById("address").value || "请输入地址";
-  var job = document.getElementById("job").value || "请输入职业";
-  var nameWidth, addressWidth, jobWidth, maxWidth = 0;
-  cardCtx.font = "bold 30px sans-serif";
-  cardCtx.fillStyle = "#fff";
-  cardCtx.fillText(name, 105, 35);
-  nameWidth = cardCtx.measureText(name).width;
-  cardCtx.font = "bold 20px sans-serif";
-  cardCtx.fillText(address, 105, 60);
-  cardCtx.fillText(job, 105, 85);
-  addressWidth = cardCtx.measureText(address).width;
-  jobWidth = cardCtx.measureText(job).width;
-  if(maxWidth < nameWidth) {
-    maxWidth = nameWidth;
-  }
-  if(maxWidth < addressWidth) {
-    maxWidth = addressWidth;
-  }
-  if(maxWidth < jobWidth) {
-    maxWidth = jobWidth;
-  }
-  // 绘制口号
-  var slogan = document.getElementById("slogan").value || "请输入口号";
-  cardCtx.save();
-  // 做图形变换
-  cardCtx.rotate(-0.1);
-  cardCtx.translate(0, 50);
-  // 阴影
-  cardCtx.shadowOffsetX = 10;
-  cardCtx.shadowOffsetY = 10;
-  cardCtx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-  cardCtx.shadowBlur = 1.5;
-  cardCtx.fillStyle = "#ddd";
-  // 计算口号位置
-  var solganWidth;
-  solganWidth = cardCtx.measureText(slogan).width;
-  var offset = (cardCtx.canvas.width - 115 - maxWidth - solganWidth) / 2;
-  cardCtx.fillText(slogan, 115 + maxWidth + offset, 50);
-  // 画曲线
-  cardCtx.beginPath();
-  cardCtx.moveTo(115 + maxWidth + offset, 70);
-  cardCtx.quadraticCurveTo(115 + maxWidth + offset, 50, 115 + solganWidth + maxWidth + offset, 60);
-  cardCtx.strokeStyle = "#ddd";
-  cardCtx.stroke();
-  cardCtx.restore();
-}
-// 触发click事件
-generateBtn.click();
-
-// 创建和设置animCanvas，该canvas才是真正的显示
-var animCanvas = document.getElementById('animCanvas');
-var animCtx = animCanvas.getContext('2d');
-animCtx.canvas.width = 600;
-animCtx.canvas.height = 100;
-
-var circles = [];
-setInterval(function() {
-  // 擦出画布
-  animCtx.clearRect(0, 0, animCtx.canvas.width, animCtx.canvas.height);
-  // 把离屏canvas的内容画进来
-  animCtx.drawImage(cardCanvas, 0, 0, animCtx.canvas.width, animCtx.canvas.height,
-    0, 0, cardCtx.canvas.width, cardCtx.canvas.height);
-  // 绘制下落的圆形
-  for(var i=0; i<=10; i++) {
-    if(!circles[i]) {
-      circles[i] = {};
-      circles[i].radius = Math.floor(Math.random() * 5) + 1;
-      circles[i].y = - circles[i].radius - Math.floor(Math.random() * 10);
-      circles[i].x = i * 60 + Math.floor(Math.random() * 10) - 5;
-      circles[i].vy = Math.floor(Math.random() * 5) + 1;
-    }
-    animCtx.beginPath();
-    animCtx.arc(circles[i].x, circles[i].y, circles[i].radius, 0, Math.PI * 2);
-    animCtx.fillStyle = "rgba(255, 255, 255, 0.5)";
-    animCtx.fill();
-    circles[i].y = circles[i].y + circles[i].vy;
-    if(circles[i].y > animCtx.canvas.height + circles[i].radius * 2) {
-      circles[i] = undefined;
-    }
-  }
-}, 100);
-  </script>
 </body>
+
 </html>
