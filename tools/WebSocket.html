@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>WebSockets客户端示例</title>
+    <script src="../resume/js/jquery.min.js"></script>
 </head>
 <script>
     var webSocket;
@@ -65,31 +66,151 @@
     }
 </script>
 <style>
-
+    #box{
+        display: flex;
+    }
+    #box img{
+        display: block;
+        width: 100px;
+        height: 100px;
+    }
+    #dropArea {
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
 </style>
+
 <body>
     <h1>WebSocket客户端示例</h1>
     <div id="message"></div>
     <button id="connect" onClick="connect();">建立连接</button>
     <button id="send" onClick="send();">发送数据</button>
     <button id="disconnect" onClick="disconnect();">断开连接</button><br />
-    <input type='file' multiple onchange="view(this.files)" />
+    <input id="myFile" type='file' multiple accept="" onchange="view(this.files)" />
     <progress id="Progress" value="0" max="100"></progress>
-    <input type="button" value="下载" onclick="download()">
+    <progress id="myProgress" value="50" max="100"></progress>
+    <input type="button" value="上传下载" onclick="download()">
     <div id="view"></div>
-    
+    <br />
+    <input type="button" value="url下载" onclick="fetchDownload(videos, '图片')">
+    <input type="button" value="form下载" onclick="downloadFile(filepath, '图片')">
+    <input type="button" value="get下载" onclick="downloadFiles(videos, '图片')">
+    <a href="https://s3.amazonaws.com/uifaces/faces/twitter/danthms/128.jpg" download="test">点击下载</a>
+    <div id='box'>
+        <div id="dropArea">拖拽上传</div>
+    </div>
+    <script>
+        var box = document.getElementById("box");
+        var dropArea = document.getElementById("dropArea");
+        dropArea.addEventListener("dragenter", handleDragenter, false);
+        dropArea.addEventListener("dragover", handleDragover, false);
+        dropArea.addEventListener("drop", handleDrop, false);
+
+        // 阻止dragenter和dragover的默认行为，这样才能使drop事件被触发
+        function handleDragenter(e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        function handleDragover(e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            var files = e.dataTransfer.files[0];
+            var fr = new FileReader();//实例FileReader对象
+            fr.readAsDataURL(files);//把上传的文件对象转换成url
+            fr.onload = function (e) {
+                var url=e.target.result;//上传文件的URL
+                var img = document.createElement('img')
+                img.src = url
+                box.insertBefore(img,dropArea); 
+            }
+        }
+    </script>
     <script>
         var fileList = []
+        var filepath = 'https://s3.amazonaws.com/uifaces/faces/twitter/danthms/128.jpg'
+        var videos = 'https://video.zhihu.com/video/1229898553352896512?'
         var div = document.getElementById("view")
-        
+
         function download() {
+            // window.open('downloadFile.zip');
+            // location.href = 'downloadFile.zip';
+
             for (let i = 0; i < fileList.length; i++) {
                 funcDownload(fileList[i], fileList[i].name)
             }
         }
+        /**
+         * 下载文件
+         * @param {String} path - 下载地址/下载请求地址。
+         * @param {String} name - 下载文件的名字/重命名（考虑到兼容性问题，最好加上后缀名）
+         */
+        function downloadFiles(path, name) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('get', path);
+            xhr.responseType = 'blob';
+            xhr.send();
+            // xhr是XMLHttpRequest对象
+            const content = xhr.getResponseHeader('content-disposition'); // 注意是全小写，自定义的header也是全小写
+            console.log('content: ', content);
+            if (content) {
+                let name1 = content.match(/filename=(.*);/)[1]; // 获取filename的值
+                let name2 = content.match(/filename\*=(.*)/)[1]; // 获取filename*的值
+                name1 = decodeURIComponent(name1);
+                name2 = decodeURIComponent(name2.substring(6)); // 这个下标6就是UTF-8''
+            }
+            xhr.onload = function () {
+                if (this.status === 200 || this.status === 304) {
+                    // 如果是IE10及以上，不支持download属性，采用msSaveOrOpenBlob方法，但是IE10以下也不支持msSaveOrOpenBlob
+                    if ('msSaveOrOpenBlob' in navigator) {
+                        navigator.msSaveOrOpenBlob(this.response, name);
+                        return;
+                    }
+                    // const blob = new Blob([this.response], { type: xhr.getResponseHeader('Content-Type') });
+                    // const url = URL.createObjectURL(blob);
+
+                    const url = URL.createObjectURL(this.response);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = name;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    const fileReader = new FileReader();
+                    fileReader.readAsDataURL(this.response);
+                    fileReader.onload = function () {
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = this.result;
+                        a.download = name;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    };
+                }
+            };
+        }
         // 查看上传预览
         function view(files) {
             for (let i = 0; i < files.length; i++) {
+                var FormData = new FormData();
+                //添加表单参数，如果后台用文件数组接收
+                //FormData.append("file", e.target.files);
+                //如果后台只接收单一文件
+                FormData.append("file", files[0]);
                 fileList.push(files[i])
                 let fr = new FileReader();
                 fr.readAsDataURL(files[i])
@@ -113,9 +234,9 @@
                         }
                         div.appendChild(img);
                     }
-                    var span = document.createElement("span")
-                    span.innerHTML = files[i].name
-                    div.appendChild(span);
+                    var divs = document.createElement("div")
+                    divs.innerHTML = files[i].name
+                    div.appendChild(divs);
                 };
                 fr.onprogress = function (ev) {
                     var percent = Math.floor(event.loaded / event.total * 100);
@@ -125,7 +246,7 @@
                     }
                 }
             }
-            console.log(fileList,files);
+            console.log(fileList, files);
         };
 
         // 文件类型className返回
@@ -151,33 +272,64 @@
             e.initEvent('click', false, false);
             a.dispatchEvent(e);
         }
+        function fetchDownload(url, filename) {
+            return fetch(url).then(res => res.blob().then(blob => {
+                let a = document.createElement('a');
+                let url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }))
+        }
+        /**
+         * 下载文件
+         * @param {String} path - 请求的地址
+         * @param {String} fileName - 文件名
+         */
+        function downloadFile(downloadUrl, fileName) {
+            // 创建表单
+            const formObj = document.createElement('form');
+            formObj.action = downloadUrl;
+            formObj.method = 'get';
+            formObj.style.display = 'none';
+            // 创建input，主要是起传参作用
+            const formItem = document.createElement('input');
+            formItem.value = fileName; // 传参的值
+            formItem.name = 'fileName'; // 传参的字段名
+            // 插入到网页中
+            formObj.appendChild(formItem);
+            document.body.appendChild(formObj);
+            formObj.submit(); // 发送请求
+            document.body.removeChild(formObj); // 发送完清除掉
+        }
 
         function funcDownload(content, filename) {
             // 创建隐藏的可下载链接
-            var eleLink = document.createElement('a');
-            eleLink.download = filename;
-            eleLink.style.display = 'none';
+            var a = document.createElement('a');
+            a.download = filename;
+            a.style.display = 'none';
             // 字符内容转变成blob地址
             var blob = new Blob([content]);
-            eleLink.href = URL.createObjectURL(blob);
+            a.href = window.URL.createObjectURL(blob);
             // 触发点击
-            document.body.appendChild(eleLink);
-            eleLink.click();
+            document.body.appendChild(a);
+            a.click();
             // 然后移除
-            document.body.removeChild(eleLink);
+            document.body.removeChild(a);
         }
         //建立一个可存取到该file的url,  createObjectURL兼容处理
         function getObjectURL(file) {
-            var url = null ;
-            if (window.createObjectURL!=undefined) { // basic
-                url = window.createObjectURL(file) ;
-            } else if (window.URL!=undefined) { // mozilla(firefox)
-                url = window.URL.createObjectURL(file) ;
-            } else if (window.webkitURL!=undefined) { // webkit or chrome
-                url = window.webkitURL.createObjectURL(file) ;
+            var url = null;
+            if (window.createObjectURL != undefined) { // basic
+                url = window.createObjectURL(file);
+            } else if (window.URL != undefined) { // mozilla(firefox)
+                url = window.URL.createObjectURL(file);
+            } else if (window.webkitURL != undefined) { // webkit or chrome
+                url = window.webkitURL.createObjectURL(file);
             }
             console.log(url)
-            return url ;  //输出格式 blob:http://localhost:8082/dd56dfec-12ef-4532-ae88-f1a2e6802f2c
+            return url;  //输出格式 blob:http://localhost:8082/dd56dfec-12ef-4532-ae88-f1a2e6802f2c
         }
         const getImages = (el, includeDuplicates = false) => {
             const images = [...el.getElementsByTagName('img')].map(img => img.getAttribute('src'));
