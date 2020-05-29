@@ -1,236 +1,445 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <script>
-    window.onload = () => {
-      initParameter()
-      initCanvas()
-    }
-
-    function initParameter() {
-      const {
-        screen: {
-          width
-        },
-        devicePixelRatio
-      } = window
-      this.windowWidth = width
-      this.dpr = Math.round(devicePixelRatio)
-    }
-
-    async function initCanvas() {
-      const canvas = document.getElementById('canvas')
-      const ctx = canvas.getContext('2d')
-
-      this.canvas = canvas
-      this.ctx = ctx
-
-      await getBackgroundImage()
-      await getQRCodeImage()
-      await getAvatarImage()
-
-      this.fillBackgroundImage()
-      this.fillQrCodeImage()
-      this.fillUsernameText()
-      this.fillHelpText()
-      this.fillUserInfo()
-
-    }
-
-    function getBackgroundImage() {
-      return new Promise(async (resolve) => {
-        const backgroundImage = new Image()
-        backgroundImage.src = await getURLBase64('http://cdn.algbb.cn/test/wechatbg.jpg')
-        // backgroundImage.src = 'http://cdn.algbb.cn/test/wechatbg.jpg'
-        backgroundImage.crossOrigin = '*'
-        backgroundImage.onload = () => {
-          this.backgroundImage = backgroundImage
-          resolve()
-        }
-      })
-    }
-
-    function getQRCodeImage() {
-      return new Promise(async (resolve) => {
-        const qrCodeImage = new Image()
-        qrCodeImage.src = await getURLBase64('http://cdn.algbb.cn/test/qrcode.jpg')
-        // qrCodeImage.src = 'http://cdn.algbb.cn/test/qrcode.jpg'
-        qrCodeImage.crossOrigin = '*'
-        qrCodeImage.onload = () => {
-          this.qrCodeImage = qrCodeImage
-          resolve()
-        }
-      })
-    }
-
-    function getAvatarImage() {
-      return new Promise(async (resolve) => {
-        const avatarImage = new Image()
-        avatarImage.src = await getURLBase64('http://cdn.algbb.cn/test/avatar.jpg')
-        // avatarImage.src = 'http://cdn.algbb.cn/test/avatar.jpg'
-        avatarImage.crossOrigin = '*'
-        avatarImage.onload = () => {
-          this.avatarImage = avatarImage
-          resolve()
-        }
-      })
-    }
-
-    function fillBackgroundImage() {
-      const {
-        width,
-        height
-      } = this.backgroundImage
-
-      // canvas宽度为手机宽度 - 40px
-      const newCanvasWidth = this.windowWidth - 40
-      const scale = width / newCanvasWidth
-      const newCanvasHeight = height / scale
-
-      this.canvas.width = newCanvasWidth * this.dpr
-      this.canvas.height = newCanvasHeight * this.dpr
-      this.canvas.style.width = (newCanvasWidth * this.dpr) + 'px'
-      this.canvas.style.height = (newCanvasHeight * this.dpr) + 'px'
-      this.ctx.scale(this.dpr, this.dpr)
-
-      this.ctx.clearRect(0, 0, newCanvasWidth, newCanvasHeight)
-      this.ctx.drawImage(this.backgroundImage, 0, 0, newCanvasWidth, newCanvasHeight)
-
-      this.canvasWidth = newCanvasWidth
-      this.canvasHeight = newCanvasHeight
-    }
-
-    function fillQrCodeImage() {
-      const {
-        width,
-        height
-      } = this.qrCodeImage
-      const {
-        canvasWidth,
-        canvasHeight
-      } = this
-
-      // 设置二维码尺寸，默认正方形
-      const qrCodeImageWidth = canvasWidth - 140
-      const scale = width / qrCodeImageWidth
-      const qrCodeImageHeight = height / scale
-
-      // 设置渲染坐标
-      const renderPointX = canvasWidth / 2 - qrCodeImageWidth / 2
-      const renderPointY = canvasHeight / 2 - qrCodeImageHeight / 2 - 30
-
-      this.qrCodePointX = renderPointX
-      this.qrCodePointY = renderPointY
-      this.qrCodeImageWidth = qrCodeImageWidth
-      this.qrCodeImageHeight = qrCodeImageHeight
-
-      this.ctx.drawImage(this.qrCodeImage, renderPointX, renderPointY, qrCodeImageWidth, qrCodeImageHeight)
-    }
-
-    function fillUsernameText() {
-      const {
-        canvasWidth
-      } = this
-
-      this.ctx.font = 'normal 20px 微软雅黑'
-      this.ctx.fillStyle = '#666'
-      this.ctx.textAlign = 'center'
-      this.ctx.textBaseline = 'middle'
-
-      this.ctx.fillText('zhcxk1998', canvasWidth / 2, this.qrCodePointY - 20)
-    }
-
-    function fillHelpText() {
-      const {
-        canvasWidth
-      } = this
-
-      this.ctx.font = 'normal 16px 微软雅黑'
-      this.ctx.fillStyle = '#999'
-      this.ctx.textAlign = 'center'
-      this.ctx.textBaseline = 'middle'
-      this.ctx.fillText('微信扫描上方二维码，添加好友', canvasWidth / 2, this.qrCodePointY + this.qrCodeImageHeight + 80)
-    }
-
-    function fillUserInfo() {
-      const userName = 'BB小天使'
-      const {
-        canvasWidth
-      } = this
-      const {
-        width,
-        height
-      } = this.avatarImage
-      const {
-        width: textWidth
-      } = this.ctx.measureText(userName)
-
-      // 设置头像大小，默认头像为正方形，30 * 30
-      const avatarWidth = 30
-      const scale = width / avatarWidth
-      const avatarHeight = height / scale
-
-      // 设置用户名与头像的间隔
-      const cap = 10
-      // 计算出头像与名字组合的宽度
-      const composeWidth = avatarWidth + textWidth + cap
-
-      // 配置渲染的横纵坐标
-      const renderPointX = canvasWidth / 2 - composeWidth / 2
-      const renderPointY = this.qrCodePointY + this.qrCodeImageHeight + 100
-
-      // 设置回左对齐，不然与头像与名字排列会乱
-      this.ctx.textAlign = 'left'
-
-      // 渲染
-      this.ctx.fillText(userName, renderPointX + avatarWidth + cap, renderPointY + avatarHeight / 2)
-      this.ctx.drawImage(this.avatarImage, renderPointX, renderPointY, avatarWidth, avatarHeight)
-    }
-
-    function saveImage() {
-      const {
-        canvasWidth,
-        canvasHeight
-      } = this
-
-      console.log(this.canvas.toDataURL())
-    }
-
-    function getURLBase64(url) {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest()
-        xhr.open('get', url, true)
-        xhr.responseType = 'blob'
-        xhr.onload = function () {
-          if (this.status === 200) {
-            const blob = this.response
-            const fileReader = new FileReader()
-            fileReader.onloadend = function (e) {
-              const {
-                target
-              } = e
-              const result = target.result
-              resolve(result)
-            }
-            fileReader.readAsDataURL(blob)
-          }
-        }
-        xhr.onerror = function () {
-          reject()
-        }
-        xhr.send()
-      })
-    }
-  </script>
-  <style>
-  </style>
+<meta charset="utf-8" />
+<title>swiper轮播合集</title>
+<link rel="stylesheet" type="text/css" href="./css/swiper.css" />
+<script src="https://cdn.bootcdn.net/ajax/libs/Swiper/5.3.8/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+			*{margin: 0; padding: 0;}
+			 p{text-align: center;}
+			 img{ width: 43.75rem;
+				 height: 18.125rem;
+			}
+			 .swiper-container{
+				 width: 43.75rem;
+				 height: 18.125rem;
+				 margin:0 auto;
+			 }
+			 .swiper-button-next {
+			   right: 20px;
+			   left: auto;
+			 }
+			 .swiper-button-prev {
+			   left: 20px;
+			   right: auto;
+			 }
+			 /* css定义分页，导航按钮颜色 */
+			 #case5{
+			     --swiper-theme-color: #ff6600;
+			     --swiper-pagination-color: #00ff33;/* 两种都可以 */
+			   }
+			 #case6 img,#case7 img{transform: scale(0.7);}
+			 #case7{
+				 width:auto;
+			 }
+		</style>
 </head>
-
 <body>
-  <div class="container">
-    <canvas id="canvas" onclick="saveImage()"></canvas>
-  </div>
-</body>
+<p>水平切换</p>
+<div class="swiper-container" id="case1">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+<div class="swiper-slide"><img src="./img/1.png"></div>
+</div>
 
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<div class="swiper-pagination"></div>
+
+<div class="swiper-scrollbar"></div>
+</div>
+<p>垂直切换</p>
+<div class="swiper-container" id="case2">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+<div class="swiper-slide"><img src="./img/1.png"></div>
+</div>
+
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<div class="swiper-pagination"></div>
+
+<div class="swiper-scrollbar"></div>
+</div>
+<p>视差轮播</p>
+<div class="swiper-container" id="case3">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="./img/1.png" data-swiper-parallax-scale="0.15" data-swiper-parallax-opacity="0.5"></div>
+<div class="swiper-slide"><img src="./img/2.png" data-swiper-parallax-scale="0.15" data-swiper-parallax-opacity="0.5"></div>
+<div class="swiper-slide"><img src="./img/1.png" data-swiper-parallax-scale="0.15" data-swiper-parallax-opacity="0.5"></div>
+<div class="swiper-slide"><img src="./img/2.png" data-swiper-parallax-scale="0.15" data-swiper-parallax-opacity="0.5"></div>
+<div class="swiper-slide"><img src="./img/1.png" data-swiper-parallax-scale="0.15" data-swiper-parallax-opacity="0.5"></div>
+<div class="swiper-slide"><img src="./img/2.png" data-swiper-parallax-scale="0.15" data-swiper-parallax-opacity="0.5"></div>
+</div>
+
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<div class="swiper-pagination"></div>
+
+<div class="swiper-scrollbar"></div>
+</div>
+<p>幻灯片</p>
+<div class="swiper-container" id="case4">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+</div>
+
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<div class="swiper-pagination"></div>
+
+<div class="swiper-scrollbar"></div>
+</div>
+<p>渐变轮播</p>
+<div class="swiper-container" id="case5">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="./img/1.png" data-swiper-parallax-scale="1.15"></div>
+<div class="swiper-slide"><img src="./img/2.png" data-swiper-parallax-scale="1.15"></div>
+<div class="swiper-slide"><img src="./img/1.png" data-swiper-parallax-scale="1.15"></div>
+<div class="swiper-slide"><img src="./img/2.png" data-swiper-parallax-scale="1.15"></div>
+<div class="swiper-slide"><img src="./img/1.png" data-swiper-parallax-scale="1.15"></div>
+<div class="swiper-slide"><img src="./img/2.png" data-swiper-parallax-scale="1.15"></div>
+</div>
+
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<div class="swiper-pagination"></div>
+
+<div class="swiper-scrollbar"></div>
+</div>
+<p>立方轮播</p>
+<div class="swiper-container" id="case6">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+</div>
+
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<div class="swiper-pagination"></div>
+
+<div class="swiper-scrollbar"></div>
+</div>
+<p>覆盖流3d切换</p>
+<div class="swiper-container" id="case7">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+<div class="swiper-slide"><img src="./img/1.png"></div>
+</div>
+
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<div class="swiper-pagination"></div>
+
+<div class="swiper-scrollbar"></div>
+</div>
+<p>翻转轮播</p>
+<div class="swiper-container" id="case8">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="./img/1.png"></div>
+<div class="swiper-slide"><img src="./img/2.png"></div>
+<div class="swiper-slide"><img src="./img/1.png"></div>
+</div>
+
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<div class="swiper-pagination"></div>
+
+<div class="swiper-scrollbar"></div>
+</div>
+<script type="text/javascript">
+		<!--水平切换  -->
+		var mySwiper = new Swiper('#case1', {
+			autoplay: true,//可选选项，自动滑动
+			initialSlide :1,//默认显示第二张图片索引从0开始
+			speed:2000,//设置过度时间
+			/* grabCursor: true,//鼠标样式根据浏览器不同而定 */
+			 autoplay : {
+				delay:3000
+			  },                 /*  设置每隔3000毫秒切换 */
+			<!-- 分页器 -->
+			 pagination: {
+				  el: '.swiper-pagination',
+				  clickable :true,
+				},
+			<!-- 导航按钮 上一页下一页 -->
+			 navigation: {
+				  nextEl: '.swiper-button-next',
+				  prevEl: '.swiper-button-prev',
+				},
+			<!-- 滚动条 -->
+			 scrollbar: {
+				  el: '.swiper-scrollbar',
+				  hide:true,
+				},
+			/*  设置当鼠标移入图片时是否停止轮播*/
+			autoplay: {
+				disableOnInteraction: false,
+			  },
+		});
+		 /* 垂直切换 */
+		var mySwiper2 = new Swiper("#case2",{
+			direction : 'vertical', //垂直轮播
+			autoplay: true,//可选选项，自动滑动
+			initialSlide :1,//默认显示第二张图片索引从0开始
+			speed:2000,//设置过度时间
+			/* grabCursor: true,//鼠标样式根据浏览器不同而定 */
+			 autoplay : {
+				delay:3000
+			  },                 /*  设置每隔3000毫秒切换 */
+			<!-- 分页器 -->
+			 pagination: {
+				  el: '.swiper-pagination',
+				  clickable :true,
+				},
+			<!-- 导航按钮 上一页下一页 -->
+			 navigation: {
+				  nextEl: '.swiper-button-next',
+				  prevEl: '.swiper-button-prev',
+				},
+			<!-- 滚动条 -->
+			 scrollbar: {
+				  el: '.swiper-scrollbar',
+				  hide:true,
+				},
+		});
+		/* 视差轮播 */
+		var mySwiper3 = new Swiper("#case3",{
+			loop : true,       //允许从第一张到最后一张，或者从最后一张到第一张  循环属性
+			parallax : true,//视差位移动画
+			autoplay: true,//可选选项，自动滑动
+			initialSlide :0,//默认显示第二张图片索引从0开始
+			speed:2000,//设置过度时间
+			/* grabCursor: true,//鼠标样式根据浏览器不同而定 */
+			 autoplay : {
+				delay:3000
+			  },                 /*  设置每隔3000毫秒切换 */
+			<!-- 分页器 -->
+			 pagination: {
+				  el: '.swiper-pagination',
+				  clickable :true,
+				},
+			<!-- 导航按钮 上一页下一页 -->
+			 navigation: {
+				  nextEl: '.swiper-button-next',
+				  prevEl: '.swiper-button-prev',
+				},
+			<!-- 滚动条 -->
+			 scrollbar: {
+				  el: '.swiper-scrollbar',
+				  hide:true,
+				},
+		});
+	    /* 幻灯片轮播*/
+	    var mySwiper4 = new Swiper("#case4",{
+		loop : true,       //允许从第一张到最后一张，或者从最后一张到第一张  循环属性
+	    slidesPerView :3,   // 设置显示三张
+	    centeredSlides : true,     //使当前图片居中显示
+	    centeredSlidesBounds: true,    //使左右两边的图片始终贴合边缘
+		/* slidesOffsetBefore : 100,  //偏移，使第一张图片向右偏移100px */
+	   	autoplay: true,//可选选项，自动滑动
+	   	initialSlide :0,//默认显示第二张图片索引从0开始
+	   	speed:2000,//设置过度时间
+	   	/* grabCursor: true,//鼠标样式根据浏览器不同而定 */
+	   	 autoplay : {
+	   		delay:1000
+	   	  },                 /*  设置每隔3000毫秒切换 */
+	   	<!-- 分页器 -->
+	   	 pagination: {
+	   		  el: '.swiper-pagination',
+	   		  clickable :true,
+	   		},
+	   	<!-- 导航按钮 上一页下一页 -->
+	   	 navigation: {
+	   		  nextEl: '.swiper-button-next',
+	   		  prevEl: '.swiper-button-prev',
+	   		},
+	   	<!-- 滚动条 -->
+	   	 scrollbar: {
+	   		  el: '.swiper-scrollbar',
+	   		  hide:true,
+	   		},
+	   });
+		/*渐变轮播 */
+	    var mySwiper = new Swiper('#case5', {
+			loop : true,        //允许从第一张到最后一张，或者从最后一张到第一张  循环属性
+			parallax : true,   //视差位移动画
+			effect : 'fade',  //轮播效果，fade渐变
+	    	autoplay: true,  //可选选项，自动滑动
+	    	initialSlide :1,//默认显示第二张图片索引从0开始
+	    	speed:3000,//设置过度时间
+	    	/* grabCursor: true,//鼠标样式根据浏览器不同而定 */
+	    	 autoplay : {
+	    		delay:3000
+	    	  },                 /*  设置每隔3000毫秒切换 */
+	    	<!-- 分页器 -->
+	    	 pagination: {
+	    		  el: '.swiper-pagination', 
+	    		  clickable :true,        /* 可点击切换 */
+				  dynamicBullets: true,   /* 动力球样式 */
+	    		},
+	    	<!-- 导航按钮 上一页下一页 -->
+	    	 navigation: {
+	    		  nextEl: '.swiper-button-next',
+	    		  prevEl: '.swiper-button-prev',
+	    		},
+	    	<!-- 滚动条 -->
+	    	 scrollbar: {
+	    		  el: '.swiper-scrollbar',
+	    		  hide:true,
+	    		},
+	    	/*  设置当鼠标移入图片时是否停止轮播*/
+	    	autoplay: {
+	    		disableOnInteraction: false,
+	    	  },
+			  
+	    });
+	    /* 立方轮播 */
+	    var mySwiper = new Swiper('#case6', {
+			keyboard : true,     //启用键盘左右切换
+			loop : true,        //允许从第一张到最后一张，或者从最后一张到第一张  循环属性
+			parallax : true,   //视差位移动画
+	    	effect : 'cube',  //轮播效果，cube立方轮播
+	    	autoplay: true,  //可选选项，自动滑动
+	    	initialSlide :0,//默认显示第二张图片索引从0开始
+	    	speed:3000,//设置过度时间
+	    	/* grabCursor: true,//鼠标样式根据浏览器不同而定 */
+	    	 autoplay : {
+	    		delay:3000
+	    	  },                 /*  设置每隔3000毫秒切换 */
+	    	<!-- 分页器 -->
+	    	 pagination: {
+	    		  el: '.swiper-pagination', 
+	    		  clickable :true,        /* 可点击切换 */
+	    		  dynamicBullets: true,   /* 动力球样式 */
+	    		},
+	    	<!-- 导航按钮 上一页下一页 -->
+	    	 navigation: {
+	    		  nextEl: '.swiper-button-next',
+	    		  prevEl: '.swiper-button-prev',
+				  hideOnClick: true,
+	    		},
+	    	<!-- 滚动条 -->
+	    	 scrollbar: {
+	    		  el: '.swiper-scrollbar',
+	    		  hide:true,
+	    		},
+	    	/*  设置当鼠标移入图片时是否停止轮播*/
+	    	autoplay: {
+	    		disableOnInteraction: false,
+	    	  },
+		  /* 立方轮播属性 */
+			cubeEffect: {
+				slideShadows: true,
+				shadow: true,
+				shadowOffset: 100,
+				shadowScale: 0.6
+				},
+	    });
+	   /* 覆盖流3d切换 */
+		var mySwiper = new Swiper('#case7', {
+	    	loop : true,        //允许从第一张到最后一张，或者从最后一张到第一张  循环属性
+	    	effect : 'coverflow',  //轮播效果，coverflow覆盖流效果
+			slidesPerView :2, 
+			centeredSlides: true,
+	    	autoplay: true,  //可选选项，自动滑动
+	    	initialSlide :1,//默认显示第二张图片索引从0开始
+	    	speed:3000,//设置过度时间
+	    	/* grabCursor: true,//鼠标样式根据浏览器不同而定 */
+	    	 autoplay : {
+	    		delay:3000
+	    	  },                 /*  设置每隔3000毫秒切换 */
+	    	<!-- 分页器 -->
+	    	 pagination: {
+	    		  el: '.swiper-pagination', 
+	    		  clickable :true,        /* 可点击切换 */
+	    		  dynamicBullets: true,   /* 动力球样式 */
+	    		},
+	    	<!-- 导航按钮 上一页下一页 -->
+	    	 navigation: {
+	    		  nextEl: '.swiper-button-next',
+	    		  prevEl: '.swiper-button-prev',
+	    		},
+	    	<!-- 滚动条 -->
+	    	 scrollbar: {
+	    		  el: '.swiper-scrollbar',
+	    		  hide:true,
+	    		},
+	    	/*  设置当鼠标移入图片时是否停止轮播*/
+	    	autoplay: {
+	    		disableOnInteraction: false,
+	    	  },
+	    	  coverflowEffect: {
+	    	      rotate: 30,
+	    	      stretch: 10,
+	    	      depth: 60,
+	    	      modifier: 2,
+	    	      slideShadows : true
+	    	    },
+	    });
+	   /* 翻转效果轮播 */
+	   var mySwiper = new Swiper('#case8', {
+		zomm :true,         //变焦属性，可以放大图片
+	   	loop : true,        //允许从第一张到最后一张，或者从最后一张到第一张  循环属性
+	   	effect : 'flip',  //轮播效果，flip翻转效果
+	   	slidesPerView :2, 
+	   	centeredSlides: true,
+	   	autoplay: true,  //可选选项，自动滑动
+	   	initialSlide :1,//默认显示第二张图片索引从0开始
+	   	speed:3000,//设置过度时间
+	   	/* grabCursor: true,//鼠标样式根据浏览器不同而定 */
+	   	 autoplay : {
+	   		delay:3000
+	   	  },                 /*  设置每隔3000毫秒切换 */
+	   	<!-- 分页器 -->
+	   	 pagination: {
+	   		  el: '.swiper-pagination', 
+	   		  clickable :true,        /* 可点击切换 */
+	   		  dynamicBullets: true,   /* 动力球样式 */
+	   		},
+	   	<!-- 导航按钮 上一页下一页 -->
+	   	 navigation: {
+	   		  nextEl: '.swiper-button-next',
+	   		  prevEl: '.swiper-button-prev',
+	   		},
+	   	<!-- 滚动条 -->
+	   	 scrollbar: {
+	   		  el: '.swiper-scrollbar',
+	   		  hide:true,
+	   		},
+	   	/*  设置当鼠标移入图片时是否停止轮播*/
+	   	autoplay: {
+	   		disableOnInteraction: false,
+	   	  },
+	   	  coverflowEffect: {
+	   	      rotate: 30,
+	   	      stretch: 10,
+	   	      depth: 60,
+	   	      modifier: 2,
+	   	      slideShadows : true
+	   	    },
+	   });
+	</script>
+</body>
 </html>
